@@ -262,19 +262,20 @@ class RetrieverSetup:
             try:
                 # 먼저 Chroma에서 문서 가져오기 시도
                 result = vector_db.get()
-                logger.info(f"ChromaDB get() 결과 키: {list(result.keys())}")
                 
                 if "documents" in result and result["documents"]:
                     docs = result["documents"]
-                    logger.info(f"ChromaDB에서 {len(docs)} 개의 문서를 가져왔습니다.")
+                    metadatas = result.get("metadatas", [None] * len(docs))
                 else:
                     # 문서가 없는 경우, 임시 문서 생성
                     logger.warning("ChromaDB에서 문서를 가져올 수 없습니다. 임시 문서를 생성합니다.")
                     docs = ["This is a temporary document for testing purposes."]
                 
                 doc_objects = [
-                    Document(page_content=text)
-                    for text in docs
+                    Document(page_content=text,
+                             metadata = meta if meta else {}
+                             )
+                    for text, meta in zip(docs, metadatas)
                 ]
                 
                 # 키워드 기반 검색을 위한 BM25 리트리버 생성
