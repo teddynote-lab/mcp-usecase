@@ -101,6 +101,7 @@ async def search_knowledge(
         query: 검색하려는 질문이나 키워드
         top_k: 반환할 최대 결과 수
         score_threshold: 결과로 포함할 최소 관련성 점수 (0.0-1.0)
+        search_method: 검색 방법(semantic, keyword, hybrid)
     
     Returns:
         형식화된 검색 결과
