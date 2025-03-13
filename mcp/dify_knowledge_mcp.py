@@ -15,9 +15,7 @@ import httpx
 import os
 import json
 import time
-from typing import Dict, List, Optional, Union
-import asyncio
-from functools import lru_cache
+from typing import Dict, Optional
 from dotenv import load_dotenv
 
 # .env 파일 로드
@@ -93,6 +91,7 @@ async def search_knowledge(
     query: str, 
     top_k: int = 5, 
     score_threshold: float = 0.5,
+    search_method: str = "semantic_search",
     ctx: Context = None
 ) -> str:
     """
@@ -143,6 +142,7 @@ async def search_knowledge(
         request_data = {
             "knowledge_id": KNOWLEDGE_ID,
             "query": query,
+            "search_method": search_method,
             "retrieval_setting": {
                 "top_k": top_k,
                 "score_threshold": score_threshold

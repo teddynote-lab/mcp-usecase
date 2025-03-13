@@ -476,6 +476,7 @@ class ExternalKnowledgeRequest(BaseModel):
 
     knowledge_id: Annotated[str, "검색할 지식 베이스의 ID"]
     query: Annotated[str, "사용자의 검색 쿼리"]
+    search_method: Annotated[str, "검색 방법(semantic_search, keyword_search, hybrid_search)"] = "hybrid_search"
     retrieval_setting: Annotated[RetrievalSetting, "검색 설정"]
 
 
@@ -551,7 +552,7 @@ async def retrieve_knowledge(
     # 초기 상태 설정
     initial_state = KnowledgeState(
         query=request.query,
-        search_method="semantic_search", # UI에서 설정할 수 없기 때문에 현재 적힌 값으로 적용
+        search_method=request.search_method,
         top_k=request.retrieval_setting.top_k,
         score_threshold=request.retrieval_setting.score_threshold,
         results=[],
