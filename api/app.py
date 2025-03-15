@@ -34,8 +34,9 @@ API_KEY = "dify-external-knowledge-api-key"
 api_key_header = APIKeyHeader(name="Authorization")
 
 # 디렉토리 설정
-DATA_DIR = "./data"
-CHROMA_DB_DIR = "./chroma_db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(BASE_DIR, "data")
+CHROMA_DB_DIR = os.path.join(BASE_DIR, "chroma_db")
 
 # PDF 파일 경로
 PDF_PATH = os.path.join(DATA_DIR, "test.pdf")
