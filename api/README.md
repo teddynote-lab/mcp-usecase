@@ -1,1 +1,0 @@
-dify_claude_mcp project
