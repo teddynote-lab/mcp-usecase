@@ -2,6 +2,7 @@ import logging
 import os
 import time
 from typing import Annotated, Any, Dict, List, Optional, TypedDict
+from pathlib import Path
 
 import uvicorn
 from dotenv import load_dotenv
@@ -18,28 +19,26 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langgraph.graph import END, START, StateGraph
 
-
-###### STEP 0. 기본 설정 ######
-# .env 파일 로드
+# 환경 변수 로드
 load_dotenv()
 
 # 로깅 설정
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# API 키 설정: 커스터마이즈가 가능합니다.
-# Dify 외부 지식 API 설정 시, API Key 값에 해당하는 부분입니다. 
-# API Endpoint에 작성하지 않도록 주의해주세요.
+# API 키 설정
 API_KEY = "dify-external-knowledge-api-key"
 api_key_header = APIKeyHeader(name="Authorization")
 
 # 디렉토리 설정
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "data")
-CHROMA_DB_DIR = os.path.join(BASE_DIR, "chroma_db")
+BASE_DIR = Path(__file__).parent
+PROJECT_ROOT = BASE_DIR.parent
+DATA_DIR = PROJECT_ROOT / "data" 
+CHROMA_DB_DIR = BASE_DIR / "chroma_db"
 
-# PDF 파일 경로
-PDF_PATH = os.path.join(DATA_DIR, "test.pdf")
+# PDF 파일 경로 (프로젝트 공유 데이터 폴더 사용)
+PDF_FILES = list(DATA_DIR.glob("*.pdf"))
+PDF_PATH = PDF_FILES[0] if PDF_FILES else DATA_DIR / "sample.pdf"
 
 # FastAPI 앱 생성
 app = FastAPI(title="Dify 외부 지식 API - LangGraph 버전")
@@ -79,7 +78,6 @@ class KnowledgeState(TypedDict):
 class DocumentProcessor:
     """
     PDF 파일을 로드하고 텍스트를 추출하여 청크로 분할한 후
-
     벡터 저장소(ChromaDB)에 저장하는 역할을 담당합니다.
     """
 
@@ -90,7 +88,6 @@ class DocumentProcessor:
         Args:
             knowledge_id (str): 지식 베이스 ID
         """
-
         self.knowledge_id = knowledge_id
     
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
@@ -103,7 +100,6 @@ class DocumentProcessor:
         Returns:
             KnowledgeState: 업데이트된 그래프 상태
         """
-
         logger.info("DocumentProcessor 노드 실행 중...")
         
         # 디렉토리 확인 및 생성
@@ -111,7 +107,7 @@ class DocumentProcessor:
         os.makedirs(CHROMA_DB_DIR, exist_ok=True)
         
         # PDF 파일 확인
-        if not os.path.exists(PDF_PATH):
+        if not PDF_PATH.exists():
             logger.warning(f"PDF 파일이 없습니다: {PDF_PATH}. 테스트용 파일을 생성합니다.")
             with open(PDF_PATH, "w") as f:
                 f.write("This is a test document for Dify external knowledge API testing. " + 
@@ -124,7 +120,7 @@ class DocumentProcessor:
             logger.info(f"임베딩 모델 초기화 완료. 모델 객체: {embedding}")
             
             # 기존 ChromaDB 컬렉션이 있는지 확인
-            chroma_exists = os.path.exists(os.path.join(CHROMA_DB_DIR, "chroma.sqlite3"))
+            chroma_exists = (CHROMA_DB_DIR / "chroma.sqlite3").exists()
             
             # 벡터 저장소 초기화
             if chroma_exists:
@@ -134,7 +130,7 @@ class DocumentProcessor:
                     vector_db = Chroma(
                         collection_name=self.knowledge_id,
                         embedding_function=embedding,
-                        persist_directory=CHROMA_DB_DIR
+                        persist_directory=str(CHROMA_DB_DIR)
                     )
                     
                     # 데이터가 있는지 확인
@@ -148,7 +144,7 @@ class DocumentProcessor:
                     chroma_exists = False
                     
                     # 기존 DB 디렉토리 백업 후 삭제
-                    if os.path.exists(CHROMA_DB_DIR):
+                    if CHROMA_DB_DIR.exists():
                         backup_dir = f"{CHROMA_DB_DIR}_backup_{int(time.time())}"
                         os.rename(CHROMA_DB_DIR, backup_dir)
                         os.makedirs(CHROMA_DB_DIR, exist_ok=True)
@@ -156,7 +152,7 @@ class DocumentProcessor:
             if not chroma_exists:
                 logger.info("새 벡터 저장소 생성 중...")
                 # PDFPlumberLoader를 사용하여 PDF 로드 (페이지별 Document 객체 반환)
-                loader = PDFPlumberLoader(PDF_PATH)
+                loader = PDFPlumberLoader(str(PDF_PATH))
                 docs = loader.load()
                 logger.info(f"PDF 로드 완료. 페이지 수: {len(docs)}")
                 
@@ -175,25 +171,25 @@ class DocumentProcessor:
                         Document(
                             page_content="This is a test document chunk 1 for Dify external knowledge API.",
                             metadata={
-                                "path": PDF_PATH,
+                                "path": str(PDF_PATH),
                                 "description": "Test PDF document",
-                                "title": os.path.basename(PDF_PATH)
+                                "title": PDF_PATH.name
                             }
                         ),
                         Document(
                             page_content="This is a test document chunk 2 about PDF processing and retrieval.",
                             metadata={
-                                "path": PDF_PATH,
+                                "path": str(PDF_PATH),
                                 "description": "Test PDF document",
-                                "title": os.path.basename(PDF_PATH)
+                                "title": PDF_PATH.name
                             }
                         ),
                         Document(
                             page_content="This is a test document chunk 3 explaining external knowledge API implementation.",
                             metadata={
-                                "path": PDF_PATH,
+                                "path": str(PDF_PATH),
                                 "description": "Test PDF document",
-                                "title": os.path.basename(PDF_PATH)
+                                "title": PDF_PATH.name
                             }
                         )
                     ]
@@ -202,10 +198,9 @@ class DocumentProcessor:
                 vector_db = Chroma.from_documents(
                     documents=split_docs,
                     embedding=embedding,
-                    persist_directory=CHROMA_DB_DIR,
+                    persist_directory=str(CHROMA_DB_DIR),
                     collection_name=self.knowledge_id
                 )
-
                 logger.info(f"새 벡터 저장소 생성 완료. 문서 수: {len(split_docs)}")
             
             # 상태에 벡터 저장소 추가
@@ -267,15 +262,19 @@ class RetrieverSetup:
                 if "documents" in result and result["documents"]:
                     docs = result["documents"]
                     metadatas = result.get("metadatas", [None] * len(docs))
+                    logger.info(f"ChromaDB에서 {len(docs)} 개의 문서를 가져왔습니다.")
                 else:
                     # 문서가 없는 경우, 임시 문서 생성
                     logger.warning("ChromaDB에서 문서를 가져올 수 없습니다. 임시 문서를 생성합니다.")
                     docs = ["This is a temporary document for testing purposes."]
+                    metadatas = [None]
                 
+                # 메타데이터를 포함한 Document 객체 생성 (수정된 부분)
                 doc_objects = [
-                    Document(page_content=text,
-                             metadata = meta if meta else {}
-                             )
+                    Document(
+                        page_content=text,
+                        metadata=meta if meta else {}
+                    )
                     for text, meta in zip(docs, metadatas)
                 ]
                 
@@ -369,8 +368,7 @@ class PerformRetrieval:
             # 결과 형식 변환
             results = []
             for i, doc in enumerate(docs):
-
-                ## [메타데이터 전체 저장] - 원본 메타데이터를 그대로 사용
+                ## 메타데이터 전체 저장
                 metadata = doc.metadata.copy() if hasattr(doc, 'metadata') and doc.metadata else {}
 
                 # 간단한 점수 계산
@@ -392,7 +390,7 @@ class PerformRetrieval:
                 logger.warning("검색 결과가 없습니다. 기본 응답을 추가합니다.")
                 state["results"] = [{
                     "metadata": {
-                        "path": PDF_PATH,
+                        "path": str(PDF_PATH),
                         "description": "Default response"
                     },
                     "score": 0.5,
@@ -416,7 +414,7 @@ class PerformRetrieval:
         return state
 
 
-###### STEP 3. 그래프 생성, 노드 추가, 엣지 추가, 컴파일 함수 정의 ######
+###### STEP 3. 그래프 생성 및 컴파일 ######
 def create_knowledge_graph():
     """
     LangGraph 기반 지식 검색 그래프 생성
@@ -457,48 +455,24 @@ except Exception as e:
     knowledge_graph = None
 
 
-###### STEP 5. API 요청 및 응답과 관련한 클래스 정의 ######
+###### STEP 5. API 요청 및 응답 클래스 정의 ######
 class RetrievalSetting(BaseModel):
-    """
-    검색 설정 모델
-
-    API 요청 시 사용되는 검색 관련 파라미터를 정의합니다.
-    """
-
+    """검색 설정 모델"""
     top_k: Annotated[int, "반환할 최대 결과 수"]
     score_threshold: Annotated[float, "결과에 포함할 최소 관련성 점수 (0.0-1.0)"]
 
 
 class ExternalKnowledgeRequest(BaseModel):
-    """
-    외부 지식 API 요청 모델
-
-    API 요청 본문의 구조를 정의합니다.
-    """
-
+    """외부 지식 API 요청 모델"""
     knowledge_id: Annotated[str, "검색할 지식 베이스의 ID"]
     query: Annotated[str, "사용자의 검색 쿼리"]
     search_method: Annotated[str, "검색 방법(semantic_search, keyword_search, hybrid_search)"] = "hybrid_search"
     retrieval_setting: Annotated[RetrievalSetting, "검색 설정"]
 
 
-###### STEP 6. API 키 검증 함수 정의 ######
+###### STEP 6. API 키 검증 함수 ######
 async def verify_api_key(authorization: str = Header(...)):
-    """
-    API 키 검증 함수
-
-    요청 헤더에서 API 키를 추출하고 유효성을 검증합니다.
-
-    Args:
-        authorization (str): Authorization 헤더 값
-
-    Returns:
-        str: 유효한 API 키
-
-    Raises:
-        HTTPException: 인증 실패 시 발생
-    """
-
+    """API 키 검증 함수"""
     if not authorization.startswith("Bearer "):
         logger.warning("올바르지 않은 Authorization 헤더 형식")
         raise HTTPException(
@@ -521,30 +495,12 @@ async def verify_api_key(authorization: str = Header(...)):
     return token
 
 
-###### STEP 7. 그래프 실행과 API 엔드포인트 연결 ######
-# API 엔드포인트 정의
-# Dify 워크플로우와 Retrieval 테스트에서는 해당 엔드포인트로 요청
+###### STEP 7. API 엔드포인트 정의 ######
 @app.post("/retrieval")
 async def retrieve_knowledge(
     request: ExternalKnowledgeRequest,
     token: str = Depends(verify_api_key)):
-    """
-    문서 검색 API 엔드포인트
-
-    사용자 쿼리를 기반으로 관련 문서를 검색하고 결과를 반환합니다.
-    설정된 API 키(dify-external-knowledge-api-key)로만 접근 가능합니다.
-
-    Args:
-        request (ExternalKnowledgeRequest): API 요청 본문
-        token (str): 인증 토큰
-
-    Returns:
-        dict: 검색 결과가 포함된 응답
-
-    Raises:
-        HTTPException: 그래프 실행 오류 시 발생
-    """
-
+    """문서 검색 API 엔드포인트"""
     logger.info(f"API 요청 수신: query='{request.query}'")
     
     if knowledge_graph is None:
@@ -570,22 +526,15 @@ async def retrieve_knowledge(
         final_state = knowledge_graph.invoke(initial_state)
         logger.info("지식 그래프 실행 완료")
         
-        # 결과 추출 - results 키 사용
+        # 결과 추출 및 응답 생성
         results = final_state.get("results", [])
         logger.info(f"추출된 결과: {len(results)}개")
         
-        # 응답 생성
         response_records = []
         for r in results:
-            # 메타데이터 전체를 추출
             metadata = r.get("metadata", {})
-
-            # 메타데이터가 없으면 기본값으로 설정
             if not metadata:
-                metadata = {
-                    "path": "unknown",
-                    "description": ""
-                }
+                metadata = {"path": "unknown", "description": ""}
 
             response_records.append({
                 "metadata": metadata,
@@ -594,12 +543,10 @@ async def retrieve_knowledge(
                 "content": r.get("content", "No content")
             })
         
-        # 응답 반환 - 명시적 딕셔너리 생성
         return {"records": response_records}
     
     except Exception as e:
         logger.error(f"지식 그래프 실행 중 오류 발생: {str(e)}")
-        # 오류 발생 시 기본 응답 반환
         return {"records": [{
             "metadata": {
                 "path": "error",
@@ -614,22 +561,14 @@ async def retrieve_knowledge(
 # 상태 확인 엔드포인트
 @app.get("/health")
 async def health_check():
-    """
-    서버 상태 확인 엔드포인트
-    
-    API 서버 및 관련 구성 요소의 상태를 확인하고 반환합니다.
-
-    Returns:
-        dict: 서버 상태 정보
-    """
-    
+    """서버 상태 확인 엔드포인트"""
     health_status = {
         "status": "healthy" if knowledge_graph is not None else "unhealthy",
         "knowledge_graph_initialized": knowledge_graph is not None,
         "openai_api_key_set": os.getenv("OPENAI_API_KEY") is not None,
-        "data_directory_exists": os.path.exists(DATA_DIR),
-        "chroma_db_directory_exists": os.path.exists(CHROMA_DB_DIR),
-        "pdf_exists": os.path.exists(PDF_PATH)
+        "data_directory_exists": DATA_DIR.exists(),
+        "chroma_db_directory_exists": CHROMA_DB_DIR.exists(),
+        "pdf_exists": PDF_PATH.exists()
     }
     return health_status
 
