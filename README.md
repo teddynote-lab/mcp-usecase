@@ -1,6 +1,6 @@
 # 프로젝트 경로 자동 감지 및 설정 확인
 
-정확히 맞습니다! `setup_claude_json.py` 스크립트는 다음과 같은 특징이 있습니다:
+`setup_claude_json.py` 스크립트는 다음과 같은 특징이 있습니다.
 
 ## 1. 경로 자동 감지
 
@@ -15,7 +15,7 @@ python_path = sys.executable
 server_script = project_root / "mcp_server.py"
 ```
 
-이 코드는 사용자가 프로젝트를 어디에 클론했는지 상관없이:
+이 코드는 사용자가 프로젝트를 어디에 클론했는지 상관없이
 - 프로젝트 루트 디렉토리를 자동으로 찾음
 - 현재 실행 중인 Python 인터프리터를 자동으로 찾음 (가상 환경 포함)
 - 이를 기반으로 절대 경로를 계산하여 설정 파일 생성
@@ -36,7 +36,7 @@ def get_claude_config_path():
 
 ## 3. 클론 후 사용 시나리오
 
-사용자가 레포지토리를 클론한 후의 흐름:
+사용자가 레포지토리를 클론한 후의 흐름
 
 1. **레포지토리 클론**:
    ```bash
@@ -44,24 +44,24 @@ def get_claude_config_path():
    cd claude-rag
    ```
 
-2. **환경 설정** (가상 환경 및 패키지 설치):
+2. **환경 설정** (가상 환경 및 패키지 설치)
    ```bash
    python -m venv .venv
    source .venv/bin/activate  # Windows: .venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
-3. **Claude Desktop 설정**:
+3. **Claude Desktop 설정**
    ```bash
    python setup_claude_json.py
    ```
    대화형 메뉴가 표시되고 예제 선택 가능
 
-4. **자동 설치 성공 시**:
+4. **자동 설치 성공 시**
    - "Claude Desktop 설정이 자동으로 업데이트되었습니다" 메시지 표시
    - 사용자는 Claude Desktop 재시작만 하면 됨
 
-5. **자동 설치 실패 시**:
+5. **자동 설치 실패 시**
    - 수동 설정 방법 안내
    - 생성된 `claude_config.json` 파일의 위치 표시
    - Claude Desktop 설정 파일 위치 표시
