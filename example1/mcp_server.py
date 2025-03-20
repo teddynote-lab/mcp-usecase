@@ -18,11 +18,11 @@ pdf_paths = [str(path) for path in pdf_files]
 VECTOR_DIR = Path(os.getenv("VECTOR_DIR", config.VECTOR_DIR))
 
 rag_chain = PDFRetrievalChain(
-    source_uri=pdf_paths,
-    persist_directory=str(VECTOR_DIR),
-    k=config.DEFAULT_TOP_K,
-    embedding_model=config.DEFAULT_EMBEDDING_MODEL,
-    llm_model=config.DEFAULT_LLM_MODEL
+    source_uri = pdf_paths,
+    persist_directory = str(VECTOR_DIR),
+    k = config.DEFAULT_TOP_K,
+    embedding_model = config.DEFAULT_EMBEDDING_MODEL,
+    llm_model = config.DEFAULT_LLM_MODEL
 ).initialize()
 
 mcp = FastMCP(
@@ -59,7 +59,7 @@ def format_search_results(docs: List[Document]) -> str:
     return markdown_results
 
 @mcp.tool()
-async def keyword_search(query: str, top_k: Optional[int] = None) -> str:
+async def keyword_search(query: str, top_k: int = 5) -> str:
     """
     Perform keyword-based search on documents.
     
@@ -77,7 +77,7 @@ async def keyword_search(query: str, top_k: Optional[int] = None) -> str:
         return f"An error occurred during search: {str(e)}"
 
 @mcp.tool()
-async def semantic_search(query: str, top_k: Optional[int] = None) -> str:
+async def semantic_search(query: str, top_k: int = 5) -> str:
     """
     Perform semantic search on documents.
     
@@ -95,7 +95,7 @@ async def semantic_search(query: str, top_k: Optional[int] = None) -> str:
         return f"An error occurred during search: {str(e)}"
 
 @mcp.tool()
-async def hybrid_search(query: str, top_k: Optional[int] = None) -> str:
+async def hybrid_search(query: str, top_k: int = 5) -> str:
     """
     Perform hybrid search (keyword + semantic) on documents.
     

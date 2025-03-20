@@ -171,7 +171,7 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Personal
-test.py
-chroma_db*
+# etc
+vector*
+chroma*
 .DS_Store

@@ -1,10 +1,21 @@
-from mcp.server.fastmcp import FastMCP
-from dotenv import load_dotenv
 from typing import List
 import os
+
+from dotenv import load_dotenv
 from exa_py import Exa
+from mcp.server.fastmcp import FastMCP
 
 load_dotenv(override=True)
+
+exa_api_key = os.getenv("EXA_API_KEY")
+exa = Exa(api_key=exa_api_key)
+
+websearch_config = {
+    "parameters": {
+        "default_num_results": 5,
+        "include_domains": []
+    }
+}
 
 mcp = FastMCP(
     name="websearch", 
@@ -41,125 +52,115 @@ def format_search_results(search_results):
             markdown_results += "\n"
     
     return markdown_results
+    
+@mcp.tool()
+async def search_web(query: str, num_results: int = None) -> str:
+    """Exa API를 사용하여 웹을 검색하고 결과를 마크다운 형식으로 반환합니다.
+    
+    Args:
+        query: 검색 쿼리
+        num_results: 반환할 결과 수(기본 설정 무시)
+    
+    Returns:
+        마크다운 형식의 검색 결과
 
-def register_tools(mcp):
-    """MCP 서버에 웹 검색 도구 등록"""
-    
-    exa_api_key = os.getenv("EXA_API_KEY")
-    exa = Exa(api_key=exa_api_key)
-    
-    websearch_config = {
-        "parameters": {
-            "default_num_results": 5,
-            "include_domains": []
+    """
+
+    try:
+        search_args = {
+            "num_results": num_results or websearch_config["parameters"]["default_num_results"]
         }
-    }
-    
-    @mcp.tool()
-    async def search_web(query: str, num_results: int = None) -> str:
-        """Exa API를 사용하여 웹을 검색하고 결과를 마크다운 형식으로 반환합니다.
         
-        Args:
-            query: 검색 쿼리
-            num_results: 반환할 결과 수(기본 설정 무시)
+        search_results = exa.search_and_contents(
+            query, 
+            summary={"query": "Main points and key takeaways"},
+            **search_args
+        )
         
-        Returns:
-            마크다운 형식의 검색 결과
+        return format_search_results(search_results)
+    except Exception as e:
+        return f"Exa 검색 중 오류가 발생했습니다: {e}"
 
-        """
-
-        try:
-            search_args = {
-                "num_results": num_results or websearch_config["parameters"]["default_num_results"]
-            }
-            
-            search_results = exa.search_and_contents(
-                query, 
-                summary={"query": "Main points and key takeaways"},
-                **search_args
-            )
-            
-            return format_search_results(search_results)
-        except Exception as e:
-            return f"Exa 검색 중 오류가 발생했습니다: {e}"
+@mcp.tool()
+async def advanced_search_web(
+    query: str, 
+    num_results: int = None, 
+    include_domains: List[str] = None, 
+    include_text: str = None,
+    max_age_days: int = None
+) -> str:
+    """Exa API를 사용한 고급 웹 검색으로 추가 필터링 옵션을 제공합니다.
     
-    @mcp.tool()
-    async def advanced_search_web(
-        query: str, 
-        num_results: int = None, 
-        include_domains: List[str] = None, 
-        include_text: str = None,
-        max_age_days: int = None
-    ) -> str:
-        """Exa API를 사용한 고급 웹 검색으로 추가 필터링 옵션을 제공합니다.
+    Args:
+        query: 검색 쿼리
+        num_results: 반환할 결과 수(기본 설정 무시)
+        include_domains: 검색 결과에 포함할 도메인 목록
+        include_text: 검색 결과에 반드시 포함되어야 하는 텍스트
+        max_age_days: 결과의 최대 기간(일)
         
-        Args:
-            query: 검색 쿼리
-            num_results: 반환할 결과 수(기본 설정 무시)
-            include_domains: 검색 결과에 포함할 도메인 목록
-            include_text: 검색 결과에 반드시 포함되어야 하는 텍스트
-            max_age_days: 결과의 최대 기간(일)
+    Returns:
+        마크다운 형식의 검색 결과
+
+    """
+
+    try:
+        search_args = {
+            "num_results": num_results or websearch_config["parameters"]["default_num_results"]
+        }
+        
+        if include_domains:
+            search_args["include_domains"] = include_domains
+
+        elif websearch_config["parameters"]["include_domains"]:
+            search_args["include_domains"] = websearch_config["parameters"]["include_domains"]
             
-        Returns:
-            마크다운 형식의 검색 결과
-
-        """
-
-        try:
-            search_args = {
-                "num_results": num_results or websearch_config["parameters"]["default_num_results"]
-            }
+        if include_text:
+            search_args["include_text"] = [include_text]
             
-            if include_domains:
-                search_args["include_domains"] = include_domains
+        if max_age_days:
+            from datetime import datetime, timedelta
+            start_date = (datetime.now() - timedelta(days=max_age_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            search_args["start_published_date"] = start_date
+        
+        search_results = exa.search_and_contents(
+            query, 
+            summary={"query": "Main points and key takeaways"},
+            **search_args
+        )
+        
+        return format_search_results(search_results)
+    except Exception as e:
+        return f"Exa 고급 검색 중 오류가 발생했습니다: {e}"
 
-            elif websearch_config["parameters"]["include_domains"]:
-                search_args["include_domains"] = websearch_config["parameters"]["include_domains"]
-                
-            if include_text:
-                search_args["include_text"] = [include_text]
-                
-            if max_age_days:
-                from datetime import datetime, timedelta
-                start_date = (datetime.now() - timedelta(days=max_age_days)).strftime("%Y-%m-%dT%H:%M:%SZ")
-                search_args["start_published_date"] = start_date
+@mcp.resource("help: hantaek@brain-crew.com")
+def get_search_help() -> str:
+    """웹 검색 도구에 대한 도움말을 제공합니다."""
+
+    return """
+            # 웹 검색 도구 사용 가이드
             
-            search_results = exa.search_and_contents(
-                query, 
-                summary={"query": "Main points and key takeaways"},
-                **search_args
-            )
+            Claude에게 Exa API를 통한 실시간 웹 검색 기능을 제공합니다.
             
-            return format_search_results(search_results)
-        except Exception as e:
-            return f"Exa 고급 검색 중 오류가 발생했습니다: {e}"
-    
-    @mcp.resource("help: hantaek@brain-crew.com")
-    def get_search_help() -> str:
-        """웹 검색 도구에 대한 도움말을 제공합니다."""
+            ## 기본 검색
+            `search_web` 도구는 간단한 웹 검색을 수행합니다.
+            - 매개변수: 
+            - query: 검색 쿼리
+            - num_results: 반환할 결과 수(선택 사항, 기본값: 5)
+            
+            ## 고급 검색
+            `advanced_search_web` 도구는 추가 필터링 옵션이 있는 고급 검색을 제공합니다.
+            - 매개변수:
+            - query: 검색 쿼리
+            - num_results: 반환할 결과 수(선택 사항)
+            - include_domains: 검색 결과에 포함할 도메인 목록
+            - include_text: 검색 결과에 반드시 포함되어야 하는 텍스트
+            - max_age_days: 결과의 최대 기간(일)
+            
+            ## 사용 예시
+            - 기본 검색: "최신 AI 발전 동향이 궁금해요"
+            - 고급 검색: "특정 웹사이트에서만 검색하거나, 특정 텍스트가 포함된 결과만 찾고 싶을 때 사용하세요"
 
-        return """
-                # 웹 검색 도구 사용 가이드
-                
-                Claude에게 Exa API를 통한 실시간 웹 검색 기능을 제공합니다.
-                
-                ## 기본 검색
-                `search_web` 도구는 간단한 웹 검색을 수행합니다.
-                - 매개변수: 
-                - query: 검색 쿼리
-                - num_results: 반환할 결과 수(선택 사항, 기본값: 5)
-                
-                ## 고급 검색
-                `advanced_search_web` 도구는 추가 필터링 옵션이 있는 고급 검색을 제공합니다.
-                - 매개변수:
-                - query: 검색 쿼리
-                - num_results: 반환할 결과 수(선택 사항)
-                - include_domains: 검색 결과에 포함할 도메인 목록
-                - include_text: 검색 결과에 반드시 포함되어야 하는 텍스트
-                - max_age_days: 결과의 최대 기간(일)
-                
-                ## 사용 예시
-                - 기본 검색: "최신 AI 발전 동향이 궁금해요"
-                - 고급 검색: "특정 웹사이트에서만 검색하거나, 특정 텍스트가 포함된 결과만 찾고 싶을 때 사용하세요"
+            """
 
-                """
+if __name__ == "__main__":
+    mcp.run()

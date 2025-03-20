@@ -40,8 +40,6 @@ PDF_PATH = PDF_FILES[0] if PDF_FILES else DATA_DIR / "sample.pdf"
 
 app = FastAPI(title="Dify 외부 지식 API - LangGraph 버전")
 
-logger.info(f"OPENAI_API_KEY 설정 여부: {'설정됨' if os.getenv('OPENAI_API_KEY') else '설정되지 않음'}")
-
 
 ###### STEP 1. 상태(State) 및 전처리 함수 정의 ######
 
@@ -50,21 +48,21 @@ class KnowledgeState(TypedDict):
     LangGraph 그래프에서 사용되는 상태 정의
 
     각 필드는 그래프의 노드 간에 전달되는 데이터를 나타냅니다.
+
     """
 
-    # 입력 쿼리
     query: Annotated[str, "사용자가 입력한 검색 쿼리"]
-    # 검색 방법
+
     search_method: Annotated[str, "검색 방법"]
-    # 최대 결과 수
+
     top_k: Annotated[int, "반환할 최대 결과 수"]
-    # 점수 임계값
+
     score_threshold: Annotated[float, "결과에 포함할 최소 관련성 점수(0.0-1.0)"]
-    # 검색 결과
+
     results: Annotated[List[Dict[str, Any]], "검색 결과 목록"]
-    # 벡터 저장소
+
     vector_db: Annotated[Optional[Any], "Chroma 벡터 DB 인스턴스"]
-    # 리트리버
+
     semantic_retriever: Annotated[Optional[Any], "의미 기반 검색 리트리버"]
     keyword_retriever: Annotated[Optional[Any], "키워드 기반 검색 리트리버"]
     hybrid_retriever: Annotated[Optional[Any], "하이브리드 검색 리트리버"]
@@ -76,15 +74,10 @@ class DocumentProcessor:
     """
     PDF 파일을 로드하고 텍스트를 추출하여 청크로 분할한 후
     벡터 저장소(ChromaDB)에 저장하는 역할을 담당합니다.
+
     """
 
     def __init__(self, knowledge_id="test-knowledge-base"):
-        """
-        DocumnetProcessor 초기화
-
-        Args:
-            knowledge_id (str): 지식 베이스 ID
-        """
         self.knowledge_id = knowledge_id
     
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
@@ -96,6 +89,7 @@ class DocumentProcessor:
 
         Returns:
             KnowledgeState: 업데이트된 그래프 상태
+
         """
         
         os.makedirs(DATA_DIR, exist_ok=True)
@@ -181,13 +175,13 @@ class DocumentProcessor:
         
         return state
 
-
 class RetrieverSetup:
     """
     리트리버 설정 노드
 
     벡터 저장소에서 의미 기반, 키워드 기반, 하이브리드 검색을 위한
     리트리버를 설정하는 역할을 담당합니다.
+
     """
 
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
@@ -202,9 +196,11 @@ class RetrieverSetup:
 
         Raises:
             ValueError: 벡터 저장소가 상태에 없거나 리트리버 설정 실패 시 발생
+
         """
         
         vector_db = state.get("vector_db")
+
         if vector_db is None:
             logger.error("벡터 저장소가 상태에 없습니다.")
             raise ValueError("Vector store not found in state")
@@ -260,13 +256,13 @@ class RetrieverSetup:
         
         return state
 
-
 class PerformRetrieval:
     """
     검색 수행 노드
 
     사용자 쿼리에 대해 적절한 리트리버를 사용하여
     관련 문서를 검색하는 역할을 담당합니다.
+
     """
 
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
@@ -278,6 +274,7 @@ class PerformRetrieval:
 
         Returns:
             KnowledgeState: 업데이트 된 그래프 상태
+
         """
         
         query = state.get("query", "")
@@ -287,6 +284,7 @@ class PerformRetrieval:
         logger.info(f"검색 수행: 쿼리='{query}', 검색 방법={search_method}, top_k={top_k}")
         
         retriever = None
+
         if search_method == "keyword_search":
             retriever = state.get("keyword_retriever")
         elif search_method == "semantic_search":
@@ -387,7 +385,6 @@ try:
 
 except Exception as e:
     logger.error(f"지식 그래프 생성 중 오류 발생: {str(e)}")
-
     knowledge_graph = None
 
 
@@ -424,6 +421,7 @@ async def verify_api_key(authorization: str = Header(...)):
                 "error_msg": "Invalid Authorization header format. Expected 'Bearer ' format."
             }
         )
+    
     token = authorization.replace("Bearer ", "")
 
     if token != API_KEY:
@@ -436,6 +434,7 @@ async def verify_api_key(authorization: str = Header(...)):
                 "error_msg": "Authorization failed"
             }
         )
+    
     return token
 
 
@@ -446,6 +445,7 @@ async def retrieve_knowledge(
     request: ExternalKnowledgeRequest,
     token: str = Depends(verify_api_key)):
     """문서 검색 API 엔드포인트"""
+
     logger.info(f"API 요청 수신: query='{request.query}'")
     
     if knowledge_graph is None:
@@ -510,6 +510,7 @@ async def health_check():
         "chroma_db_directory_exists": CHROMA_DB_DIR.exists(),
         "pdf_exists": PDF_PATH.exists()
     }
+    
     return health_status
 
 if __name__ == "__main__":
