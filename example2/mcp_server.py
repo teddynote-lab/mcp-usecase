@@ -6,11 +6,8 @@ import time
 from typing import Dict, Optional
 from pathlib import Path
 
-
-# 환경 변수 로드
 load_dotenv()
 
-# 환경변수에서 설정 로드 또는 기본값 사용
 API_ENDPOINT = os.getenv("DIFY_API_ENDPOINT", "http://localhost:8000/retrieval")
 API_KEY = os.getenv("DIFY_API_KEY", "dify-external-knowledge-api-key")
 KNOWLEDGE_ID = os.getenv("DIFY_KNOWLEDGE_ID", "test-knowledge-base")
