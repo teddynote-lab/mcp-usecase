@@ -38,7 +38,6 @@
 .
 ├── README.md                 # This document
 ├── data                      # Example data files
-│   └── SPRi_2503_AI_Brief.pdf
 ├── docs                      # Documentation folder
 │   ├── case1.md           # RAG example description
 │   ├── case2.md           # Dify External Knowledge API example description
