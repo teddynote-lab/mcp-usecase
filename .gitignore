@@ -175,3 +175,4 @@ cython_debug/
 vector*
 chroma*
 .DS_Store
+*.pdf
