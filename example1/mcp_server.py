@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Optional, List
+from typing import List
 
 from dotenv import load_dotenv
 from langchain_core.documents import Document
