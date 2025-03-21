@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from exa_py import Exa
 from mcp.server.fastmcp import FastMCP
 
-load_dotenv(override=True)
+load_dotenv()
 
 exa_api_key = os.getenv("EXA_API_KEY")
 exa = Exa(api_key=exa_api_key)
@@ -18,19 +18,20 @@ websearch_config = {
 }
 
 mcp = FastMCP(
-    name="websearch", 
+    name="web_search", 
     version="1.0.0",
     description="Web search capability using Exa API that provides real-time internet search results. Supports both basic and advanced search with filtering options including domain restrictions, text inclusion requirements, and date filtering. Returns formatted results with titles, URLs, publication dates, and content summaries."
 )
 
 def format_search_results(search_results):
-    """검색 결과를 마크다운 형식으로 변환합니다.
+    """
+    Converts search results to markdown format.
     
     Args:
-        search_results: Exa 검색 결과
+        search_results: Exa search results
         
     Returns:
-        마크다운 형식의 문자열
+        String in markdown format
 
     """
 
@@ -55,14 +56,15 @@ def format_search_results(search_results):
     
 @mcp.tool()
 async def search_web(query: str, num_results: int = None) -> str:
-    """Exa API를 사용하여 웹을 검색하고 결과를 마크다운 형식으로 반환합니다.
+    """
+    Searches the web using Exa API and returns results in markdown format.
     
     Args:
-        query: 검색 쿼리
-        num_results: 반환할 결과 수(기본 설정 무시)
+        query: Search query
+        num_results: Number of results to return (overrides default setting)
     
     Returns:
-        마크다운 형식의 검색 결과
+        Search results in markdown format
 
     """
 
@@ -79,7 +81,7 @@ async def search_web(query: str, num_results: int = None) -> str:
         
         return format_search_results(search_results)
     except Exception as e:
-        return f"Exa 검색 중 오류가 발생했습니다: {e}"
+        return f"Error occurred during Exa search: {e}"
 
 @mcp.tool()
 async def advanced_search_web(
@@ -89,17 +91,18 @@ async def advanced_search_web(
     include_text: str = None,
     max_age_days: int = None
 ) -> str:
-    """Exa API를 사용한 고급 웹 검색으로 추가 필터링 옵션을 제공합니다.
+    """
+    Advanced web search using Exa API with additional filtering options.
     
     Args:
-        query: 검색 쿼리
-        num_results: 반환할 결과 수(기본 설정 무시)
-        include_domains: 검색 결과에 포함할 도메인 목록
-        include_text: 검색 결과에 반드시 포함되어야 하는 텍스트
-        max_age_days: 결과의 최대 기간(일)
+        query: Search query
+        num_results: Number of results to return (overrides default setting)
+        include_domains: List of domains to include in search results
+        include_text: Text that must be included in search results
+        max_age_days: Maximum age of results in days
         
     Returns:
-        마크다운 형식의 검색 결과
+        Search results in markdown format
 
     """
 
@@ -130,35 +133,35 @@ async def advanced_search_web(
         
         return format_search_results(search_results)
     except Exception as e:
-        return f"Exa 고급 검색 중 오류가 발생했습니다: {e}"
+        return f"Error occurred during Exa advanced search: {e}"
 
 @mcp.resource("help: hantaek@brain-crew.com")
 def get_search_help() -> str:
-    """웹 검색 도구에 대한 도움말을 제공합니다."""
+    """Provides help for web search tools."""
 
     return """
-            # 웹 검색 도구 사용 가이드
+            # Web Search Tool Usage Guide
             
-            Claude에게 Exa API를 통한 실시간 웹 검색 기능을 제공합니다.
+            Provides Claude with real-time web search capability through the Exa API.
             
-            ## 기본 검색
-            `search_web` 도구는 간단한 웹 검색을 수행합니다.
-            - 매개변수: 
-            - query: 검색 쿼리
-            - num_results: 반환할 결과 수(선택 사항, 기본값: 5)
+            ## Basic Search
+            The `search_web` tool performs simple web searches.
+            - Parameters: 
+            - query: Search query
+            - num_results: Number of results to return (optional, default: 5)
             
-            ## 고급 검색
-            `advanced_search_web` 도구는 추가 필터링 옵션이 있는 고급 검색을 제공합니다.
-            - 매개변수:
-            - query: 검색 쿼리
-            - num_results: 반환할 결과 수(선택 사항)
-            - include_domains: 검색 결과에 포함할 도메인 목록
-            - include_text: 검색 결과에 반드시 포함되어야 하는 텍스트
-            - max_age_days: 결과의 최대 기간(일)
+            ## Advanced Search
+            The `advanced_search_web` tool provides advanced search with additional filtering options.
+            - Parameters:
+            - query: Search query
+            - num_results: Number of results to return (optional)
+            - include_domains: List of domains to include in search results
+            - include_text: Text that must be included in search results
+            - max_age_days: Maximum age of results in days
             
-            ## 사용 예시
-            - 기본 검색: "최신 AI 발전 동향이 궁금해요"
-            - 고급 검색: "특정 웹사이트에서만 검색하거나, 특정 텍스트가 포함된 결과만 찾고 싶을 때 사용하세요"
+            ## Usage Examples
+            - Basic search: "I'm curious about the latest AI development trends"
+            - Advanced search: "Use when you want to search only specific websites or find results containing specific text"
 
             """
 

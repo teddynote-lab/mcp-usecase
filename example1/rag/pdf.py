@@ -28,6 +28,7 @@ class PDFRetrievalChain(RetrievalChain):
             persist_directory: Directory to persist vector store
             **kwargs: Additional keyword arguments for the base RetrievalChain
         """
+
         super().__init__(source_uri=source_uri, persist_directory=persist_directory, **kwargs)
     
     def load_documents(self, source_uris: List[str]) -> List[Document]:
@@ -40,6 +41,7 @@ class PDFRetrievalChain(RetrievalChain):
         Returns:
             List of loaded documents
         """
+
         docs = []
         for source_uri in source_uris:
             if not os.path.exists(source_uri):
@@ -59,6 +61,7 @@ class PDFRetrievalChain(RetrievalChain):
         Returns:
             A text splitter instance suitable for PDFs
         """
+        
         return RecursiveCharacterTextSplitter(
             chunk_size=600,
             chunk_overlap=50

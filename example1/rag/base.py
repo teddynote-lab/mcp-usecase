@@ -25,9 +25,10 @@ class RetrievalChain(ABC):
             **kwargs: Keyword arguments including:
                 source_uri: Paths to source documents
                 k: Number of results to return (default: 5)
-                embedding_model: Model name for embeddings (default: "text-embedding-3-small")
+                embedding_model: Model name for embeddings (default: OpenAI "text-embedding-3-small")
                 persist_directory: Directory to persist vector store
         """
+
         self.source_uri = kwargs.get("source_uri", [])
         self.k = kwargs.get("k", 5)
         self.embedding_model = kwargs.get("embedding_model", "text-embedding-3-small")
@@ -48,6 +49,7 @@ class RetrievalChain(ABC):
         Returns:
             List of loaded documents
         """
+
         pass
     
     @abstractmethod
@@ -58,6 +60,7 @@ class RetrievalChain(ABC):
         Returns:
             A text splitter instance
         """
+
         pass
     
     def split_documents(self, docs: List[Document], text_splitter: Any) -> List[Document]:
@@ -71,6 +74,7 @@ class RetrievalChain(ABC):
         Returns:
             Split document chunks
         """
+
         return text_splitter.split_documents(docs)
     
     def create_embedding(self) -> Any:
@@ -80,6 +84,7 @@ class RetrievalChain(ABC):
         Returns:
             An embeddings model instance
         """
+
         return OpenAIEmbeddings(model=self.embedding_model)
     
     @abstractmethod
@@ -93,6 +98,7 @@ class RetrievalChain(ABC):
         Returns:
             A vector store instance
         """
+
         pass
     
     def create_semantic_retriever(self, vectorstore: Any) -> BaseRetriever:
@@ -105,6 +111,7 @@ class RetrievalChain(ABC):
         Returns:
             A semantic search retriever
         """
+
         return vectorstore.as_retriever(
             search_kwargs={"k": self.k}
         )
@@ -119,6 +126,7 @@ class RetrievalChain(ABC):
         Returns:
             A keyword search retriever
         """
+
         return BM25Retriever.from_documents(split_docs, k=self.k)
     
     def create_hybrid_retriever(self, split_docs: List[Document], vectorstore: Any) -> BaseRetriever:
@@ -132,6 +140,7 @@ class RetrievalChain(ABC):
         Returns:
             A hybrid search retriever
         """
+
         bm25_retriever = self.create_keyword_retriever(split_docs)
         dense_retriever = self.create_semantic_retriever(vectorstore)
         
@@ -150,6 +159,7 @@ class RetrievalChain(ABC):
         Returns:
             Dictionary of retrievers by search type
         """
+
         self.embeddings = self.create_embedding()
         self.vectorstore = self.create_vectorstore(split_docs)
         
@@ -167,6 +177,7 @@ class RetrievalChain(ABC):
         Returns:
             The initialized retrieval chain instance
         """
+
         docs = self.load_documents(self.source_uri)
         if not docs:
             print("No documents were loaded.")
@@ -194,6 +205,7 @@ class RetrievalChain(ABC):
         Raises:
             ValueError: If the retrieval chain is not initialized
         """
+
         if not hasattr(self, 'retrievers') or self.retrievers is None:
             raise ValueError("Initialization required. Call initialize() method first.")
         
@@ -217,6 +229,7 @@ class RetrievalChain(ABC):
         Raises:
             ValueError: If the retrieval chain is not initialized
         """
+
         if not hasattr(self, 'retrievers') or self.retrievers is None:
             raise ValueError("Initialization required. Call initialize() method first.")
         
@@ -236,6 +249,7 @@ class RetrievalChain(ABC):
         Raises:
             ValueError: If the retrieval chain is not initialized
         """
+
         if not hasattr(self, 'retrievers') or self.retrievers is None:
             raise ValueError("Initialization required. Call initialize() method first.")
         
@@ -252,4 +266,5 @@ class RetrievalChain(ABC):
         Returns:
             Relevant documents
         """
+        
         return self.search_semantic(query, k)

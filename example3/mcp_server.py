@@ -1,7 +1,8 @@
-from mcp.server.fastmcp import FastMCP
 import os
 import requests
+
 from dotenv import load_dotenv
+from mcp.server.fastmcp import FastMCP
 
 load_dotenv()
 
@@ -14,14 +15,14 @@ mcp = FastMCP(
 @mcp.tool()
 async def dify_workflow(input: str) -> str:
     """
-    주어진 입력으로 Dify 워크플로우를 실행합니다.
+    Executes a Dify workflow with the given input.
     
     Args:
-        input: 처리할 입력 텍스트
+        input: Input text to process
         
     Returns:
-        Dify 워크플로우에서 반환된 결과
-
+        Results returned from the Dify workflow
+        
     """
 
     dify_base_url = os.getenv("DIFY_BASE_URL")
@@ -47,7 +48,7 @@ async def dify_workflow(input: str) -> str:
     if "outputs" in result.get("data", {}):
         outputs = result["data"]["outputs"]
     
-    return next(iter(outputs.values()), "Dify 워크플로우에서 출력을 받지 못했습니다.")
+    return next(iter(outputs.values()), "No output received from Dify workflow.")
 
 if __name__ == "__main__":
     mcp.run()

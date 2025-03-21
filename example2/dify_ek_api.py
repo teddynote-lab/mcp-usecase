@@ -24,56 +24,56 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# API 키 설정
+# API key setup
 API_KEY = "dify-external-knowledge-api-key"
 api_key_header = APIKeyHeader(name="Authorization")
 
-# 디렉토리 설정
+# Directory setup
 BASE_DIR = Path(__file__).parent
 PROJECT_ROOT = BASE_DIR.parent
 DATA_DIR = PROJECT_ROOT / "data" 
 CHROMA_DB_DIR = BASE_DIR / "chroma_db"
 
-# PDF 파일 경로 (프로젝트 공유 데이터 폴더 사용)
+# PDF file path (using project shared data folder)
 PDF_FILES = list(DATA_DIR.glob("*.pdf"))
 PDF_PATH = PDF_FILES[0] if PDF_FILES else DATA_DIR / "sample.pdf"
 
-app = FastAPI(title="Dify 외부 지식 API - LangGraph 버전")
+app = FastAPI(title="Dify External Knowledge API - LangGraph Version")
 
 
-###### STEP 1. 상태(State) 및 전처리 함수 정의 ######
+###### STEP 1. State and Preprocessing Function Definition ######
 
 class KnowledgeState(TypedDict):
     """
-    LangGraph 그래프에서 사용되는 상태 정의
-
-    각 필드는 그래프의 노드 간에 전달되는 데이터를 나타냅니다.
+    State definition used in LangGraph graph.
+    
+    Each field represents data passed between graph nodes.
 
     """
 
-    query: Annotated[str, "사용자가 입력한 검색 쿼리"]
+    query: Annotated[str, "User's search query"]
 
-    search_method: Annotated[str, "검색 방법"]
+    search_method: Annotated[str, "Search method"]
 
-    top_k: Annotated[int, "반환할 최대 결과 수"]
+    top_k: Annotated[int, "Maximum number of results to return"]
 
-    score_threshold: Annotated[float, "결과에 포함할 최소 관련성 점수(0.0-1.0)"]
+    score_threshold: Annotated[float, "Minimum relevance score for inclusion (0.0-1.0)"]
 
-    results: Annotated[List[Dict[str, Any]], "검색 결과 목록"]
+    results: Annotated[List[Dict[str, Any]], "List of search results"]
 
-    vector_db: Annotated[Optional[Any], "Chroma 벡터 DB 인스턴스"]
+    vector_db: Annotated[Optional[Any], "Chroma vector DB instance"]
 
-    semantic_retriever: Annotated[Optional[Any], "의미 기반 검색 리트리버"]
-    keyword_retriever: Annotated[Optional[Any], "키워드 기반 검색 리트리버"]
-    hybrid_retriever: Annotated[Optional[Any], "하이브리드 검색 리트리버"]
+    semantic_retriever: Annotated[Optional[Any], "Semantic search retriever"]
+    keyword_retriever: Annotated[Optional[Any], "Keyword-based search retriever"]
+    hybrid_retriever: Annotated[Optional[Any], "Hybrid search retriever"]
 
 
-###### STEP 2. 노드(Node) 정의 ######
+###### STEP 2. Node Definition ######
 
 class DocumentProcessor:
     """
-    PDF 파일을 로드하고 텍스트를 추출하여 청크로 분할한 후
-    벡터 저장소(ChromaDB)에 저장하는 역할을 담당합니다.
+    Loads PDF files, extracts text, splits into chunks,
+    and stores in a vector database (ChromaDB).
 
     """
 
@@ -82,13 +82,13 @@ class DocumentProcessor:
     
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
         """
-        문서 처리 및 벡터 저장소 설정 실행
+        Process documents and set up vector storage.
 
         Args:
-            state (KnowledgeState): 현재 그래프 상태
+            state: Current graph state
 
         Returns:
-            KnowledgeState: 업데이트된 그래프 상태
+            Updated graph state
 
         """
         
@@ -110,11 +110,11 @@ class DocumentProcessor:
                     collection_data = vector_db.get()
 
                     if not collection_data.get("documents", []):
-                        logger.warning("기존 컬렉션이 비어 있습니다. 새로 생성합니다.")
+                        logger.warning("Existing collection is empty. Creating a new one.")
                         raise ValueError("Empty collection")
                     
                 except Exception as e:
-                    logger.warning(f"기존 벡터 저장소 로드 실패: {str(e)}. 새로 생성합니다.")
+                    logger.warning(f"Failed to load existing vector store: {str(e)}. Creating a new one.")
                     chroma_exists = False
                     
                     if CHROMA_DB_DIR.exists():
@@ -132,7 +132,7 @@ class DocumentProcessor:
                 split_docs = text_splitter.split_documents(docs)
                 
                 if not split_docs:
-                    logger.warning("텍스트 청크가 없습니다. 임시 데이터를 사용합니다.")
+                    logger.warning("No text chunks available. Using temporary data.")
                     split_docs = [
                         Document(
                             page_content="This is a test document chunk 1 for Dify external knowledge API.",
@@ -170,39 +170,34 @@ class DocumentProcessor:
             state["vector_db"] = vector_db
             
         except Exception as e:
-            logger.error(f"벡터 저장소 초기화 중 오류 발생: {str(e)}")
+            logger.error(f"Error during vector store initialization: {str(e)}")
             raise
         
         return state
 
 class RetrieverSetup:
     """
-    리트리버 설정 노드
-
-    벡터 저장소에서 의미 기반, 키워드 기반, 하이브리드 검색을 위한
-    리트리버를 설정하는 역할을 담당합니다.
-
+    Sets up semantic, keyword, and hybrid retrievers 
+    from the vector database.
+    
     """
 
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
         """
-        리트리버 설정 실행
+        Configure retrievers.
 
         Args:
-            state (KnowledgeState): 현재 그래프 상태
+            state: Current graph state
 
         Returns:
-            KnowledgeState: 업데이트된 그래프 상태
-
-        Raises:
-            ValueError: 벡터 저장소가 상태에 없거나 리트리버 설정 실패 시 발생
+            Updated graph state with configured retrievers
 
         """
         
         vector_db = state.get("vector_db")
 
         if vector_db is None:
-            logger.error("벡터 저장소가 상태에 없습니다.")
+            logger.error("Vector store not found in state.")
             raise ValueError("Vector store not found in state")
         
         top_k = state.get("top_k", 5)
@@ -212,7 +207,7 @@ class RetrieverSetup:
                 search_kwargs={"k": top_k}
             )
             state["semantic_retriever"] = semantic_retriever
-            logger.info("시맨틱 리트리버 설정 완료")
+            logger.info("Semantic retriever setup complete")
             
             try:
                 result = vector_db.get()
@@ -220,9 +215,9 @@ class RetrieverSetup:
                 if "documents" in result and result["documents"]:
                     docs = result["documents"]
                     metadatas = result.get("metadatas", [None] * len(docs))
-                    logger.info(f"ChromaDB에서 {len(docs)} 개의 문서를 가져왔습니다.")
+                    logger.info(f"Retrieved {len(docs)} documents from ChromaDB.")
                 else:
-                    logger.warning("ChromaDB에서 문서를 가져올 수 없습니다. 임시 문서를 생성합니다.")
+                    logger.warning("Could not retrieve documents from ChromaDB. Creating temporary documents.")
                     docs = ["This is a temporary document for testing purposes."]
                     metadatas = [None]
                 
@@ -245,35 +240,32 @@ class RetrieverSetup:
                 state["hybrid_retriever"] = hybrid_retriever
                 
             except Exception as inner_e:
-                logger.error(f"BM25 리트리버 설정 중 오류 발생: {str(inner_e)}")
-                logger.info("시맨틱 리트리버만 사용합니다.")
-                state["keyword_retriever"] = semantic_retriever  # 대체용
-                state["hybrid_retriever"] = semantic_retriever   # 대체용
+                logger.error(f"Error during BM25 retriever setup: {str(inner_e)}")
+                logger.info("Using semantic retriever only.")
+                state["keyword_retriever"] = semantic_retriever  # Fallback
+                state["hybrid_retriever"] = semantic_retriever   # Fallback
             
         except Exception as e:
-            logger.error(f"리트리버 설정 중 오류 발생: {str(e)}")
+            logger.error(f"Error during retriever setup: {str(e)}")
             raise
         
         return state
 
 class PerformRetrieval:
     """
-    검색 수행 노드
-
-    사용자 쿼리에 대해 적절한 리트리버를 사용하여
-    관련 문서를 검색하는 역할을 담당합니다.
+    Performs search using the appropriate retriever based on user query.
 
     """
 
     def __call__(self, state: KnowledgeState) -> KnowledgeState:
         """
-        검색 수행 실행
+        Execute retrieval process.
 
         Args:
-            state (KnowledgeState): 현재 그래프 상태
+            state: Current graph state
 
         Returns:
-            KnowledgeState: 업데이트 된 그래프 상태
+            Updated graph state with search results
 
         """
         
@@ -281,7 +273,7 @@ class PerformRetrieval:
         search_method = state.get("search_method", "hybrid_search")
         top_k = state.get("top_k", 5)
         score_threshold = state.get("score_threshold", 0.5) 
-        logger.info(f"검색 수행: 쿼리='{query}', 검색 방법={search_method}, top_k={top_k}")
+        logger.info(f"Performing search: query='{query}', method={search_method}, top_k={top_k}")
         
         retriever = None
 
@@ -297,12 +289,12 @@ class PerformRetrieval:
             retriever = state.get("hybrid_retriever")
         
         if not retriever:
-            logger.error(f"리트리버를 찾을 수 없습니다: {search_method}")
+            logger.error(f"Retriever not found: {search_method}")
             retriever = state.get("hybrid_retriever")
             if not retriever:
                 raise ValueError(f"No retriever available in state")
             
-            logger.warning(f"{search_method} 리트리버를 찾을 수 없어 하이브리드 리트리버로 대체합니다.")
+            logger.warning(f"Could not find {search_method} retriever, using hybrid retriever instead.")
         
         try:
             docs = retriever.get_relevant_documents(query)  
@@ -323,7 +315,7 @@ class PerformRetrieval:
             state["results"] = results
 
             if not results:
-                logger.warning("검색 결과가 없습니다. 기본 응답을 추가합니다.")
+                logger.warning("No search results. Adding default response.")
 
                 state["results"] = [{
                     "metadata": {
@@ -336,7 +328,7 @@ class PerformRetrieval:
                 }]
                 
         except Exception as e:
-            logger.error(f"검색 수행 중 오류 발생: {str(e)}")
+            logger.error(f"Error during retrieval: {str(e)}")
 
             state["results"] = [{
                 "metadata": {
@@ -351,16 +343,15 @@ class PerformRetrieval:
         return state
 
 
-###### STEP 3. 그래프 생성 및 컴파일 ######
+###### STEP 3. Graph Creation and Compilation ######
 
 def create_knowledge_graph():
     """
-    LangGraph 기반 지식 검색 그래프 생성
-
-    그래프 생성, 노드 추가, 노드 간 연결, 그래프 컴파일을 수행합니다.
-
+    Creates a LangGraph-based knowledge retrieval graph.
+    
     Returns:
-        StateGraph: 컴파일된 그래프 인스턴스
+        Compiled graph instance
+        
     """
     
     graph_builder = StateGraph(KnowledgeState)
@@ -377,42 +368,42 @@ def create_knowledge_graph():
     return graph_builder.compile()
 
 
-###### STEP 4. 그래프 인스턴스 생성 ######
+###### STEP 4. Graph Instance Creation ######
 
 try:
     knowledge_graph = create_knowledge_graph()
-    logger.info("지식 그래프 인스턴스 생성 완료")
+    logger.info("Knowledge graph instance creation complete")
 
 except Exception as e:
-    logger.error(f"지식 그래프 생성 중 오류 발생: {str(e)}")
+    logger.error(f"Error creating knowledge graph: {str(e)}")
     knowledge_graph = None
 
 
-###### STEP 5. API 요청 및 응답 클래스 정의 ######
+###### STEP 5. API Request and Response Class Definition ######
 
 class RetrievalSetting(BaseModel):
-    """검색 설정 모델"""
+    """Retrieval settings model"""
 
-    top_k: Annotated[int, "반환할 최대 결과 수"]
-    score_threshold: Annotated[float, "결과에 포함할 최소 관련성 점수 (0.0-1.0)"]
+    top_k: Annotated[int, "Maximum number of results to return"]
+    score_threshold: Annotated[float, "Minimum relevance score for inclusion (0.0-1.0)"]
 
 
 class ExternalKnowledgeRequest(BaseModel):
-    """외부 지식 API 요청 모델"""
+    """External knowledge API request model"""
 
-    knowledge_id: Annotated[str, "검색할 지식 베이스의 ID"]
-    query: Annotated[str, "사용자의 검색 쿼리"]
-    search_method: Annotated[str, "검색 방법(semantic_search, keyword_search, hybrid_search)"] = "hybrid_search"
-    retrieval_setting: Annotated[RetrievalSetting, "검색 설정"]
+    knowledge_id: Annotated[str, "ID of the knowledge base to search"]
+    query: Annotated[str, "User search query"]
+    search_method: Annotated[str, "Search method (semantic_search, keyword_search, hybrid_search)"] = "hybrid_search"
+    retrieval_setting: Annotated[RetrievalSetting, "Retrieval settings"]
 
 
-###### STEP 6. API 키 검증 함수 ######
+###### STEP 6. API Key Validation Function ######
 
 async def verify_api_key(authorization: str = Header(...)):
-    """API 키 검증 함수"""
+    """API key validation function"""
 
     if not authorization.startswith("Bearer "):
-        logger.warning("올바르지 않은 Authorization 헤더 형식")
+        logger.warning("Invalid Authorization header format")
 
         raise HTTPException(
             status_code=403,
@@ -425,7 +416,7 @@ async def verify_api_key(authorization: str = Header(...)):
     token = authorization.replace("Bearer ", "")
 
     if token != API_KEY:
-        logger.warning("인증 실패: 유효하지 않은 API 키")
+        logger.warning("Authentication failed: Invalid API key")
 
         raise HTTPException(
             status_code=403,
@@ -438,18 +429,18 @@ async def verify_api_key(authorization: str = Header(...)):
     return token
 
 
-###### STEP 7. API 엔드포인트 정의 ######
+###### STEP 7. API Endpoint Definition ######
 
 @app.post("/retrieval")
 async def retrieve_knowledge(
     request: ExternalKnowledgeRequest,
     token: str = Depends(verify_api_key)):
-    """문서 검색 API 엔드포인트"""
+    """Document retrieval API endpoint"""
 
-    logger.info(f"API 요청 수신: query='{request.query}'")
+    logger.info(f"API request received: query='{request.query}'")
     
     if knowledge_graph is None:
-        logger.error("지식 그래프가 초기화되지 않았습니다.")
+        logger.error("Knowledge graph is not initialized.")
 
         raise HTTPException(status_code=500, detail="Knowledge graph is not initialized")
     
@@ -486,7 +477,7 @@ async def retrieve_knowledge(
         return {"records": response_records}
     
     except Exception as e:
-        logger.error(f"지식 그래프 실행 중 오류 발생: {str(e)}")
+        logger.error(f"Error during knowledge graph execution: {str(e)}")
 
         return {"records": [{
             "metadata": {
@@ -500,7 +491,7 @@ async def retrieve_knowledge(
 
 @app.get("/health")
 async def health_check():
-    """서버 상태 확인 엔드포인트"""
+    """Server health check endpoint"""
 
     health_status = {
         "status": "healthy" if knowledge_graph is not None else "unhealthy",
@@ -514,5 +505,5 @@ async def health_check():
     return health_status
 
 if __name__ == "__main__":
-    logger.info("서버 시작 중...")
+    logger.info("Starting server...")
     uvicorn.run(app, host="0.0.0.0", port=8000)

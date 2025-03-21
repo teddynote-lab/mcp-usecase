@@ -2,10 +2,11 @@ import os
 import json
 import sys
 from pathlib import Path
+
 from dotenv import load_dotenv
 
 def get_env_variables():
-    """환경 변수를 로드하고 필요한 변수를 딕셔너리로 반환합니다."""
+    """Loads environment variables and returns them as a dictionary."""
 
     load_dotenv()
     
@@ -23,7 +24,7 @@ def get_env_variables():
     return env_dict
 
 def create_mcp_json():
-    """MCP 서버 설정 JSON 파일을 생성합니다."""
+    """Creates MCP server configuration JSON file."""
     
     project_root = Path(__file__).parent.absolute()
     
@@ -48,8 +49,8 @@ def create_mcp_json():
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=2)
     
-    print(f"MCP 설정 파일이 생성되었습니다: {json_path}")
-    print(f"생성된 환경 변수: {', '.join(env_vars.keys())}")
+    print(f"MCP configuration file created: {json_path}")
+    print(f"Generated environment variables: {', '.join(env_vars.keys())}")
     
     return str(json_path)
 
