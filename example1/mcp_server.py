@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from langchain_core.documents import Document
 from mcp.server.fastmcp import FastMCP
 
-from rag.pdf import PDFRetrievalChain
+from rag import PDFRetrievalChain
 import config
 
 load_dotenv()
