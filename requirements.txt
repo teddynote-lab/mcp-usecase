@@ -22,7 +22,6 @@ dataclasses-json==0.6.7
 deprecated==1.2.18
 distro==1.9.0
 durationpy==0.9
-exa-py==1.9.0
 fastapi==0.115.11
 filelock==3.18.0
 flatbuffers==25.2.10
@@ -118,6 +117,7 @@ sqlalchemy==2.0.39
 sse-starlette==2.2.1
 starlette==0.46.1
 sympy==1.13.3
+tavily-python==0.5.1
 tenacity==9.0.0
 tiktoken==0.9.0
 tokenizers==0.21.1

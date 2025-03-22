@@ -1,0 +1,647 @@
+aiohappyeyeballs==2.6.1
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+aiohttp==3.11.14
+    # via
+    #   -r requirements.txt
+    #   langchain-community
+aiosignal==1.3.2
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+annotated-types==0.7.0
+    # via
+    #   -r requirements.txt
+    #   pydantic
+antlr4-python3-runtime==4.9.3
+    # via
+    #   -r requirements.txt
+    #   omegaconf
+anyio==4.9.0
+    # via
+    #   -r requirements.txt
+    #   httpx
+    #   mcp
+    #   openai
+    #   sse-starlette
+    #   starlette
+    #   watchfiles
+asgiref==3.8.1
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-instrumentation-asgi
+attrs==25.3.0
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+backoff==2.2.1
+    # via
+    #   -r requirements.txt
+    #   posthog
+bcrypt==4.3.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+build==1.2.2.post1
+    # via
+    #   -r requirements.txt
+    #   chromadb
+cachetools==5.5.2
+    # via
+    #   -r requirements.txt
+    #   google-auth
+certifi==2025.1.31
+    # via
+    #   -r requirements.txt
+    #   httpcore
+    #   httpx
+    #   kubernetes
+    #   requests
+cffi==1.17.1
+    # via
+    #   -r requirements.txt
+    #   cryptography
+charset-normalizer==3.4.1
+    # via
+    #   -r requirements.txt
+    #   pdfminer-six
+    #   requests
+chroma-hnswlib==0.7.6
+    # via
+    #   -r requirements.txt
+    #   chromadb
+chromadb==0.6.3
+    # via
+    #   -r requirements.txt
+    #   langchain-chroma
+click==8.1.8
+    # via
+    #   -r requirements.txt
+    #   typer
+    #   uvicorn
+coloredlogs==15.0.1
+    # via
+    #   -r requirements.txt
+    #   onnxruntime
+cryptography==44.0.2
+    # via
+    #   -r requirements.txt
+    #   pdfminer-six
+dataclasses-json==0.6.7
+    # via
+    #   -r requirements.txt
+    #   langchain-community
+deprecated==1.2.18
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-api
+    #   opentelemetry-exporter-otlp-proto-grpc
+    #   opentelemetry-semantic-conventions
+distro==1.9.0
+    # via
+    #   -r requirements.txt
+    #   openai
+    #   posthog
+durationpy==0.9
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+fastapi==0.115.11
+    # via
+    #   -r requirements.txt
+    #   chromadb
+filelock==3.18.0
+    # via
+    #   -r requirements.txt
+    #   huggingface-hub
+flatbuffers==25.2.10
+    # via
+    #   -r requirements.txt
+    #   onnxruntime
+frozenlist==1.5.0
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+    #   aiosignal
+fsspec==2025.3.0
+    # via
+    #   -r requirements.txt
+    #   huggingface-hub
+google-auth==2.38.0
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+googleapis-common-protos==1.69.1
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-exporter-otlp-proto-grpc
+grpcio==1.71.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   opentelemetry-exporter-otlp-proto-grpc
+h11==0.14.0
+    # via
+    #   -r requirements.txt
+    #   httpcore
+    #   uvicorn
+httpcore==1.0.7
+    # via
+    #   -r requirements.txt
+    #   httpx
+httptools==0.6.4
+    # via
+    #   -r requirements.txt
+    #   uvicorn
+httpx==0.28.1
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   langgraph-sdk
+    #   langsmith
+    #   mcp
+    #   openai
+    #   tavily-python
+httpx-sse==0.4.0
+    # via
+    #   -r requirements.txt
+    #   langchain-community
+    #   mcp
+huggingface-hub==0.29.3
+    # via
+    #   -r requirements.txt
+    #   tokenizers
+humanfriendly==10.0
+    # via
+    #   -r requirements.txt
+    #   coloredlogs
+idna==3.10
+    # via
+    #   -r requirements.txt
+    #   anyio
+    #   httpx
+    #   requests
+    #   yarl
+importlib-metadata==8.6.1
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-api
+importlib-resources==6.5.2
+    # via
+    #   -r requirements.txt
+    #   chromadb
+jiter==0.9.0
+    # via
+    #   -r requirements.txt
+    #   openai
+jsonpatch==1.33
+    # via
+    #   -r requirements.txt
+    #   langchain-core
+jsonpointer==3.0.0
+    # via
+    #   -r requirements.txt
+    #   jsonpatch
+kubernetes==32.0.1
+    # via
+    #   -r requirements.txt
+    #   chromadb
+langchain==0.3.20
+    # via
+    #   -r requirements.txt
+    #   langchain-community
+langchain-chroma==0.2.2
+    # via -r requirements.txt
+langchain-community==0.3.19
+    # via -r requirements.txt
+langchain-core==0.3.45
+    # via
+    #   -r requirements.txt
+    #   langchain
+    #   langchain-chroma
+    #   langchain-community
+    #   langchain-openai
+    #   langchain-text-splitters
+    #   langgraph
+    #   langgraph-checkpoint
+    #   langgraph-prebuilt
+langchain-openai==0.3.8
+    # via -r requirements.txt
+langchain-text-splitters==0.3.6
+    # via
+    #   -r requirements.txt
+    #   langchain
+langgraph==0.3.11
+    # via -r requirements.txt
+langgraph-checkpoint==2.0.20
+    # via
+    #   -r requirements.txt
+    #   langgraph
+    #   langgraph-prebuilt
+langgraph-prebuilt==0.1.3
+    # via
+    #   -r requirements.txt
+    #   langgraph
+langgraph-sdk==0.1.57
+    # via
+    #   -r requirements.txt
+    #   langgraph
+langsmith==0.3.15
+    # via
+    #   -r requirements.txt
+    #   langchain
+    #   langchain-community
+    #   langchain-core
+markdown-it-py==3.0.0
+    # via
+    #   -r requirements.txt
+    #   rich
+marshmallow==3.26.1
+    # via
+    #   -r requirements.txt
+    #   dataclasses-json
+mcp==1.4.1
+    # via -r requirements.txt
+mdurl==0.1.2
+    # via
+    #   -r requirements.txt
+    #   markdown-it-py
+mmh3==5.1.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+monotonic==1.6
+    # via
+    #   -r requirements.txt
+    #   posthog
+mpmath==1.3.0
+    # via
+    #   -r requirements.txt
+    #   sympy
+msgpack==1.1.0
+    # via
+    #   -r requirements.txt
+    #   langgraph-checkpoint
+multidict==6.1.0
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+    #   yarl
+mypy-extensions==1.0.0
+    # via
+    #   -r requirements.txt
+    #   typing-inspect
+numpy==1.26.4
+    # via
+    #   -r requirements.txt
+    #   chroma-hnswlib
+    #   chromadb
+    #   langchain-chroma
+    #   langchain-community
+    #   onnxruntime
+    #   rank-bm25
+oauthlib==3.2.2
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+    #   requests-oauthlib
+omegaconf==2.3.0
+    # via -r requirements.txt
+onnxruntime==1.21.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+openai==1.66.3
+    # via
+    #   -r requirements.txt
+    #   langchain-openai
+opentelemetry-api==1.31.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   opentelemetry-exporter-otlp-proto-grpc
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-fastapi
+    #   opentelemetry-sdk
+    #   opentelemetry-semantic-conventions
+opentelemetry-exporter-otlp-proto-common==1.31.0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-exporter-otlp-proto-grpc
+opentelemetry-exporter-otlp-proto-grpc==1.31.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+opentelemetry-instrumentation==0.52b0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-asgi==0.52b0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-fastapi==0.52b0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+opentelemetry-proto==1.31.0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-exporter-otlp-proto-common
+    #   opentelemetry-exporter-otlp-proto-grpc
+opentelemetry-sdk==1.31.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   opentelemetry-exporter-otlp-proto-grpc
+opentelemetry-semantic-conventions==0.52b0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-instrumentation
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-fastapi
+    #   opentelemetry-sdk
+opentelemetry-util-http==0.52b0
+    # via
+    #   -r requirements.txt
+    #   opentelemetry-instrumentation-asgi
+    #   opentelemetry-instrumentation-fastapi
+orjson==3.10.15
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   langgraph-sdk
+    #   langsmith
+overrides==7.7.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+packaging==24.2
+    # via
+    #   -r requirements.txt
+    #   build
+    #   huggingface-hub
+    #   langchain-core
+    #   langsmith
+    #   marshmallow
+    #   onnxruntime
+    #   opentelemetry-instrumentation
+pdfminer-six==20231228
+    # via
+    #   -r requirements.txt
+    #   pdfplumber
+pdfplumber==0.11.5
+    # via -r requirements.txt
+pillow==11.1.0
+    # via
+    #   -r requirements.txt
+    #   pdfplumber
+posthog==3.20.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+propcache==0.3.0
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+    #   yarl
+protobuf==5.29.3
+    # via
+    #   -r requirements.txt
+    #   googleapis-common-protos
+    #   onnxruntime
+    #   opentelemetry-proto
+pyasn1==0.6.1
+    # via
+    #   -r requirements.txt
+    #   pyasn1-modules
+    #   rsa
+pyasn1-modules==0.4.1
+    # via
+    #   -r requirements.txt
+    #   google-auth
+pycparser==2.22
+    # via
+    #   -r requirements.txt
+    #   cffi
+pydantic==2.10.6
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   fastapi
+    #   langchain
+    #   langchain-core
+    #   langsmith
+    #   mcp
+    #   openai
+    #   pydantic-settings
+pydantic-core==2.27.2
+    # via
+    #   -r requirements.txt
+    #   pydantic
+pydantic-settings==2.8.1
+    # via
+    #   -r requirements.txt
+    #   langchain-community
+    #   mcp
+pygments==2.19.1
+    # via
+    #   -r requirements.txt
+    #   rich
+pypdf==5.4.0
+    # via -r requirements.txt
+pypdfium2==4.30.1
+    # via
+    #   -r requirements.txt
+    #   pdfplumber
+pypika==0.48.9
+    # via
+    #   -r requirements.txt
+    #   chromadb
+pyproject-hooks==1.2.0
+    # via
+    #   -r requirements.txt
+    #   build
+python-dateutil==2.9.0.post0
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+    #   posthog
+python-dotenv==1.0.1
+    # via
+    #   -r requirements.txt
+    #   pydantic-settings
+    #   uvicorn
+pyyaml==6.0.2
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   huggingface-hub
+    #   kubernetes
+    #   langchain
+    #   langchain-community
+    #   langchain-core
+    #   omegaconf
+    #   uvicorn
+rank-bm25==0.2.2
+    # via -r requirements.txt
+regex==2024.11.6
+    # via
+    #   -r requirements.txt
+    #   tiktoken
+requests==2.32.3
+    # via
+    #   -r requirements.txt
+    #   huggingface-hub
+    #   kubernetes
+    #   langchain
+    #   langchain-community
+    #   langsmith
+    #   posthog
+    #   requests-oauthlib
+    #   requests-toolbelt
+    #   tavily-python
+    #   tiktoken
+requests-oauthlib==2.0.0
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+requests-toolbelt==1.0.0
+    # via
+    #   -r requirements.txt
+    #   langsmith
+rich==13.9.4
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   typer
+rsa==4.9
+    # via
+    #   -r requirements.txt
+    #   google-auth
+shellingham==1.5.4
+    # via
+    #   -r requirements.txt
+    #   typer
+six==1.17.0
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+    #   posthog
+    #   python-dateutil
+sniffio==1.3.1
+    # via
+    #   -r requirements.txt
+    #   anyio
+    #   openai
+sqlalchemy==2.0.39
+    # via
+    #   -r requirements.txt
+    #   langchain
+    #   langchain-community
+sse-starlette==2.2.1
+    # via
+    #   -r requirements.txt
+    #   mcp
+starlette==0.46.1
+    # via
+    #   -r requirements.txt
+    #   fastapi
+    #   mcp
+    #   sse-starlette
+sympy==1.13.3
+    # via
+    #   -r requirements.txt
+    #   onnxruntime
+tavily-python==0.5.1
+    # via -r requirements.txt
+tenacity==9.0.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   langchain-community
+    #   langchain-core
+tiktoken==0.9.0
+    # via
+    #   -r requirements.txt
+    #   langchain-openai
+    #   tavily-python
+tokenizers==0.21.1
+    # via
+    #   -r requirements.txt
+    #   chromadb
+tqdm==4.67.1
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   huggingface-hub
+    #   openai
+typer==0.15.2
+    # via
+    #   -r requirements.txt
+    #   chromadb
+typing-extensions==4.12.2
+    # via
+    #   -r requirements.txt
+    #   anyio
+    #   chromadb
+    #   fastapi
+    #   huggingface-hub
+    #   langchain-core
+    #   openai
+    #   opentelemetry-sdk
+    #   pydantic
+    #   pydantic-core
+    #   sqlalchemy
+    #   typer
+    #   typing-inspect
+typing-inspect==0.9.0
+    # via
+    #   -r requirements.txt
+    #   dataclasses-json
+urllib3==2.3.0
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+    #   requests
+uvicorn==0.34.0
+    # via
+    #   -r requirements.txt
+    #   chromadb
+    #   mcp
+uvloop==0.21.0
+    # via
+    #   -r requirements.txt
+    #   uvicorn
+watchfiles==1.0.4
+    # via
+    #   -r requirements.txt
+    #   uvicorn
+websocket-client==1.8.0
+    # via
+    #   -r requirements.txt
+    #   kubernetes
+websockets==15.0.1
+    # via
+    #   -r requirements.txt
+    #   uvicorn
+wrapt==1.17.2
+    # via
+    #   -r requirements.txt
+    #   deprecated
+    #   opentelemetry-instrumentation
+yarl==1.18.3
+    # via
+    #   -r requirements.txt
+    #   aiohttp
+zipp==3.21.0
+    # via
+    #   -r requirements.txt
+    #   importlib-metadata
+zstandard==0.23.0
+    # via
+    #   -r requirements.txt
+    #   langsmith
