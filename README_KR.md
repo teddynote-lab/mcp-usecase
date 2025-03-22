@@ -29,7 +29,7 @@
 - **RAG(Retrieval Augmented Generation)** - PDF 문서를 대상으로 키워드, 시맨틱, 하이브리드 검색 기능
 - **Dify External Knowledge API** - Dify의 외부 지식 API를 통한 문서 검색 기능
 - **Dify Workflow** - Dify Workflow 실행 및 결과 검색 기능
-- **Web Search** - Exa API를 활용한 실시간 웹 검색 기능
+- **Web Search** - Tavily API를 활용한 실시간 웹 검색 기능
 - **자동 JSON 생성** - Claude Desktop과 Cursor에 필요한 MCP JSON 파일 자동 생성
 
 ## 프로젝트 구조
