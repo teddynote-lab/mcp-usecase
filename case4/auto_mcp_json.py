@@ -11,7 +11,7 @@ def get_env_variables():
     load_dotenv()
     
     required_vars = [
-        "EXA_API_KEY",
+        "TAVILY_API_KEY",
     ]
     
     env_dict = {}
@@ -36,7 +36,7 @@ def create_mcp_json():
     
     config = {
         "mcpServers": {
-            "exa-web-search": {
+            "tavily-web-search": {
                 "command": python_path,
                 "args": [str(server_script)],
                 "env": env_vars
