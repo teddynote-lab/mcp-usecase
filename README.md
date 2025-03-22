@@ -12,17 +12,17 @@
 
 ## Table of Contents
 
-- [Features](#-features)
-- [Project Structure](#-project-structure)
-- [Requirements](#-requirements)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
-- [Troubleshooting](#-troubleshooting)
-- [License](#-license)
-- [Contributing](#-contributing)
-- [Contact](#-contact)
-- [Author](#-author)
+- [Features](#features)
+- [Project Structure](#project-structure)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+- [Contributing](#contributing)
+- [Contact](#contact)
+- [Author](#author)
 
 ## Features
 
