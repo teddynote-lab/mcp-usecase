@@ -15,13 +15,12 @@ mcp = FastMCP(
 @mcp.tool()
 async def dify_workflow(input: str) -> str:
     """
-    Executes a Dify workflow with the given input.
+    Executes a Dify workflow and returns the results.
+    Automates complex AI tasks and provides immediate results.
+    Useful for text analysis, content generation, or processing user inputs through Dify workflows.
     
-    Args:
+    Parameters:
         input: Input text to process
-        
-    Returns:
-        Results returned from the Dify workflow
         
     """
 

@@ -40,7 +40,9 @@ def format_search_results(docs: List[Document]) -> str:
         
     Returns:
         Markdown formatted search results
+
     """
+
     if not docs:
         return "No relevant information found."
     
@@ -61,15 +63,16 @@ def format_search_results(docs: List[Document]) -> str:
 @mcp.tool()
 async def keyword_search(query: str, top_k: int = 5) -> str:
     """
-    Perform keyword-based search on documents.
+    Performs keyword-based search on PDF documents.
+    Returns the most relevant results based on exact word/phrase matches.
+    Ideal for finding specific terms, definitions, or exact phrases in documents.
     
-    Args:
+    Parameters:
         query: Search query
         top_k: Number of results to return
-        
-    Returns:
-        Markdown formatted search results
+
     """
+
     try:
         results = rag_chain.search_keyword(query, top_k)
         return format_search_results(results)
@@ -79,15 +82,16 @@ async def keyword_search(query: str, top_k: int = 5) -> str:
 @mcp.tool()
 async def semantic_search(query: str, top_k: int = 5) -> str:
     """
-    Perform semantic search on documents.
+    Performs semantic search on PDF documents.
+    Finds content semantically similar to the query, delivering relevant information even without exact word matches.
+    Best for conceptual questions, understanding themes, or when you need information related to a topic.
     
-    Args:
+    Parameters:
         query: Search query
         top_k: Number of results to return
-        
-    Returns:
-        Markdown formatted search results
+
     """
+
     try:
         results = rag_chain.search_semantic(query, top_k)
         return format_search_results(results)
@@ -97,15 +101,16 @@ async def semantic_search(query: str, top_k: int = 5) -> str:
 @mcp.tool()
 async def hybrid_search(query: str, top_k: int = 5) -> str:
     """
-    Perform hybrid search (keyword + semantic) on documents.
+    Performs hybrid search (keyword + semantic) on PDF documents.
+    Combines exact keyword matching and semantic similarity to deliver optimal results.
+    The most versatile search option for general questions or when unsure which search type is best.
     
-    Args:
+    Parameters:
         query: Search query
         top_k: Number of results to return
-        
-    Returns:
-        Markdown formatted search results
+
     """
+
     try:
         results = rag_chain.search_hybrid(query, top_k)
         return format_search_results(results)

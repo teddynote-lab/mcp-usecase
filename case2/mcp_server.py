@@ -62,16 +62,16 @@ async def dify_ek_search(
     ctx = None
 ) -> str:
     """
-    Searches for information in documents using the Dify External Knowledge API.
+    Searches for information in Dify External knowledge base.
+    Returns search results with document content, relevance scores, and source information.
+    Use when you need to find specific information in enterprise documents, knowledge bases, or specialized content.
     
     Parameters:
         query: Search question or keywords
         top_k: Maximum number of results to return
         score_threshold: Minimum relevance score for inclusion (0.0-1.0)
         search_method: Search method (semantic_search, keyword_search, hybrid_search)
-    
-    Returns:
-        Search result document content
+
     """
 
     if ctx:
@@ -158,15 +158,15 @@ def ai_trend_learning_guide(
     time_horizon: str = "short-term"
 ) -> str:
     """
-    Analyzes AI trends and provides customized learning guides based on SPRI monthly AI reports.
+    Creates customized AI learning guides based on SPRI monthly AI reports.
+    Provides latest AI trends and learning roadmaps tailored to learner level and desired timeframe.
+    Perfect for educational planning, career development in AI, or understanding current AI landscape.
     
     Parameters:
         topic: AI topic of interest (optional - e.g., "generative AI", "computer vision", "NLP")
         learning_level: Learner level ("beginner", "intermediate", "advanced")
         time_horizon: Learning plan duration ("short-term", "medium-term", "long-term")
-    
-    Returns:
-        AI trend analysis and learning guide prompt
+
     """
     
     level_approaches = {

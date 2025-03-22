@@ -67,14 +67,14 @@ def format_search_results(response):
 @mcp.tool()
 async def search_web(query: str, num_results: int = None) -> str:
     """
-    Searches the web using Tavily API and returns results in markdown format.
+    Performs real-time web search using the Tavily API.
+    Returns latest search results in markdown format including titles, URLs, and content summaries.
+    Use when you need current information, recent events, or data not available in your training.
+
     
-    Args:
+    Parameters:
         query: Search query
-        num_results: Number of results to return (overrides default setting)
-    
-    Returns:
-        Search results in markdown format
+        num_results: Number of results to return (default: 5)
 
     """
 
