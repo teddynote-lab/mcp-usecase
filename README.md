@@ -36,20 +36,21 @@
 
 ```
 .
-├── README.md                 # This document
+├── case1                     # RAG example
+├── case2                     # Dify External Knowledge API example
+├── case3                     # Dify Workflow example
+├── case4                     # Web Search example
 ├── data                      # Example data files
 ├── docs                      # Documentation folder
 │   ├── case1.md           # RAG example description
 │   ├── case2.md           # Dify External Knowledge API example description
 │   ├── case3.md           # Dify Workflow example description
 │   ├── case4.md           # Web Search example description
-│   └── installation.md       # Installation guide
-├── case1                  # RAG example
-├── case2                  # Dify External Knowledge API example
-├── case3                  # Dify Workflow example
-├── case4                  # Web Search example
+│   └── installation.md    # Installation guide
+├── .env.example              # .env example format
 ├── pyproject.toml            # Project settings
-└── requirements.txt          # Required packages list
+├── requirements.txt          # Required packages list
+└── uv.lock                   # uv.lock
 ```
 
 ## Requirements
@@ -94,8 +95,8 @@ Plese prepare a PDF file required for RAG in the `./data` directory.
 
 ## Configuration
 
-For each example directory, you need a .env file containing the required environment variables.
-Set the variables in the .env.example file and rename it to .env to get started.
+In order to execute each example, a `.env` file is required.
+Please specify the necessary environment variables in the `.env.example` file located in the root directory, and rename it to `.env`.
 
 ### sites for configuring required environment variables for each example
 - https://platform.openai.com/api-keys

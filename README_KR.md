@@ -36,7 +36,10 @@
 
 ```
 .
-├── README.md                 
+├── case1                     # RAG 예제
+├── case2                     # Dify External Knowledge API 예제
+├── case3                     # Dify Workflow 예제
+├── case4                     # Web Search 예제              
 ├── data                      # PDF 데이터 파일 
 ├── docs                      # 문서 폴더
 │   ├── case1.md           # RAG 예제 설명
@@ -44,12 +47,10 @@
 │   ├── case3.md           # Dify Workflow 예제 설명
 │   ├── case4.md           # Web Search 예제 설명
 │   └── installation.md    # 설치 가이드
-├── case1                     # RAG 예제
-├── case2                     # Dify External Knowledge API 예제
-├── case3                     # Dify Workflow 예제
-├── case4                     # Web Search 예제
+├── .env.example              # .env 예시
 ├── pyproject.toml            # 프로젝트 설정
-└── requirements.txt          # 필요 패키지 목록
+├── requirements.txt          # 필요 패키지 목록
+└── uv.lock                   # uv.lock
 ```
 
 ## 요구사항
@@ -96,7 +97,7 @@ RAG에 필요한 PDF 파일을 `./data`에 넣어주세요.
 
 ## 환경 변수 설정
 
-각 예제 디렉토리에는 필요한 환경 변수를 설정할 `.env` 파일이 필요합니다. `.env.example`에 필요한 환경 변수를 설정하고 파일명을 `.env`로 변경해주세요.
+각 예제를 실행하기 위한 `.env` 파일이 필요합니다. 루트 디렉토리의 `.env.example`에 필요한 환경 변수를 설정하고 파일명을 `.env`로 변경해주세요.
 
 ### 예제별 필요한 환경 변수 설정 사이트
 - https://platform.openai.com/api-keys
@@ -158,4 +159,4 @@ dev@brain-crew.com
 
 ## 저자
 
-[임한택](https://github.com/LHANTAEK)
+[임한택 Hantaek Lim](https://github.com/LHANTAEK)
