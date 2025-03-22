@@ -16,7 +16,7 @@
 - [프로젝트 구조](#프로젝트-구조)
 - [요구사항](#요구사항)
 - [설치](#설치)
-- [설정](#설정)
+- [환경 변수 설정](#환경-변수-설정)
 - [사용법](#사용법)
 - [문제해결](#문제해결)
 - [라이센스](#라이센스)
@@ -42,10 +42,10 @@
 ├── case4                     # Web Search 예제              
 ├── data                      # PDF 데이터 파일 
 ├── docs                      # 문서 폴더
-│   ├── case1.md           # RAG 예제 설명
-│   ├── case2.md           # Dify External Knowledge API 예제 설명
-│   ├── case3.md           # Dify Workflow 예제 설명
-│   ├── case4.md           # Web Search 예제 설명
+│   ├── case1.md           # case1 예제 설명 🚨 도구 호출 최적화 팁 포함
+│   ├── case2.md           # case2 예제 설명
+│   ├── case3.md           # case3 예제 설명
+│   ├── case4.md           # case4 예제 설명
 │   └── installation.md    # 설치 가이드
 ├── .env.example              # .env 예시
 ├── pyproject.toml            # 프로젝트 설정

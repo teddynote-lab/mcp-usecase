@@ -62,7 +62,47 @@ Claude Desktop 또는 Cursor에서 다음과 같이 사용할 수 있습니다.
 2. 검색 결과 포맷팅 함수
 3. 키워드, 시맨틱, 하이브리드 검색 도구 정의
 
-벡터 데이터베이스는 Chroma DB를 사용하여 PDF 문서의 내용을 효율적으로 저장하고 검색합니다.
+### 🚨 도구 Docstring 최적화
+
+이 예제에서 제공하는 도구들이 Claude와 같은 AI 에이전트에 의해 효과적으로 사용되기 위해서는 명확하고 맥락적인 docstring을 작성하는 것이 중요합니다.
+
+#### 왜 Docstring이 중요한가요?
+
+`@mcp.tool()`로 도구를 정의할 때, 제공하는 docstring은 Claude가 도구를 이해하고 사용하는 방식에 직접적인 영향을 미칩니다. Claude는 다음과 같은 목적으로 docstring을 읽습니다.
+
+1. **도구의 목적 이해**: Claude는 docstring을 분석하여 도구가 무엇을 하는지 파악합니다.
+2. **사용 시점 결정**: Claude는 해당 도구를 사용해야 할 상황을 판단합니다.
+3. **매개변수 형식 파악**: Claude는 필수 및 선택적 매개변수를 학습합니다.
+
+사용자가 명시적으로 도구 이름을 언급하지 않더라도, 잘 작성된 docstring을 통해 Claude가 상황에 맞게 적절한 도구를 선택할 수 있습니다. 이는 더 자연스러운 대화 흐름과 최상의 결과를 얻는 데 필수적입니다.
+
+#### 효과적인 Docstring 구조
+
+최적의 결과를 위해 docstring을 다음과 같이 구성하세요:
+
+```python
+@mcp.tool()
+async def your_tool_name(param1: str, param2: int = 5) -> str:
+    """
+    도구가 하는 일에 대한 짧은 설명 (1줄).
+    결과 또는 출력 형식에 대한 자세한 내용 (1줄).
+    이 도구를 사용해야 하는 상황에 대한 맥락적 힌트 (1줄).
+    
+    Parameters:
+        param1: 첫 번째 매개변수 설명
+        param2: 기본값이 있는 두 번째 매개변수 설명
+    """
+    # 함수 구현...
+```
+
+
+
+이러한 docstring을 통해 Claude는 다음과 같은 상황에서 지능적으로 도구를 선택할 수 있습니다.
+- 사용자가 "문서에서 X의 정의는 무엇인가요?"라고 물으면 **keyword_search** 선택
+- 사용자가 "문서에서 X 개념에 대해 설명해주세요"라고 물으면 **semantic_search** 선택
+- 사용자가 "문서에서 X에 대해 무엇이라고 하나요?"라고 물으면 **hybrid_search** 선택
+
+이처럼 사용자가 명시적으로 도구 이름을 언급하지 않더라도, 맥락적 힌트를 통해 Claude가 올바른 도구를 선택할 수 있습니다.
 
 ---
 
@@ -127,3 +167,43 @@ The `example1/mcp_server.py` file consists of the following main components:
 3. Definition of keyword, semantic, and hybrid search tools
 
 The vector database uses Chroma DB to efficiently store and search the contents of PDF documents.
+
+### 🚨 Optimizing Tool Docstrings
+
+For the tools in this example to be effectively used by AI agents like Claude, it's important to write clear and contextual docstrings.
+
+#### Why Docstrings Matter
+
+When defining tools with `@mcp.tool()`, the docstring you provide directly influences how Claude understands and uses the tool. Claude reads these docstrings to:
+
+1. **Understand the tool's purpose**: Claude analyzes the docstring to know what the tool does
+2. **Decide when to use it**: Claude determines which situations call for this specific tool
+3. **Know how to format parameters**: Claude learns the required and optional parameters
+
+Even when users don't explicitly mention the tool name, well-written docstrings allow Claude to select the appropriate tool based on the context. This is essential for a more natural conversation flow and optimal results.
+
+#### Effective Docstring Structure
+
+For optimal results, structure your docstrings like this:
+
+```python
+@mcp.tool()
+async def your_tool_name(param1: str, param2: int = 5) -> str:
+    """
+    Short description of what the tool does (1 line).
+    More details about the results or output format (1 line).
+    Contextual hints about when to use this tool (1 line).
+    
+    Parameters:
+        param1: Description of first parameter
+        param2: Description of second parameter with default value
+    """
+    # Function implementation...
+```
+
+With these docstrings, Claude can intelligently choose:
+- **keyword_search** when a user asks "What is the definition of X in the document?"
+- **semantic_search** when a user asks "Tell me about the concept of X from the document"
+- **hybrid_search** when a user asks "What does the document say about X?"
+
+This way, even if users don't explicitly name the tool, Claude can select the right one through contextual hints.

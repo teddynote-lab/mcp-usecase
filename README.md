@@ -42,10 +42,10 @@
 ├── case4                     # Web Search example
 ├── data                      # Example data files
 ├── docs                      # Documentation folder
-│   ├── case1.md           # RAG example description
-│   ├── case2.md           # Dify External Knowledge API example description
-│   ├── case3.md           # Dify Workflow example description
-│   ├── case4.md           # Web Search example description
+│   ├── case1.md           # case1 description 🚨 Includes tips for optimized tool invocation
+│   ├── case2.md           # case2 description
+│   ├── case3.md           # case3 description
+│   ├── case4.md           # case4 description
 │   └── installation.md    # Installation guide
 ├── .env.example              # .env example format
 ├── pyproject.toml            # Project settings
