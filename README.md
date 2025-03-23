@@ -95,10 +95,10 @@ Plese prepare a PDF file required for RAG in the `./data` directory.
 
 ## Configuration
 
-In order to execute each example, a `.env` file is required.
+In order to execute each case, a `.env` file is required.
 Please specify the necessary environment variables in the `.env.example` file located in the root directory, and rename it to `.env`.
 
-### sites for configuring required environment variables for each example
+### sites for configuring required environment variables for each case
 - https://platform.openai.com/api-keys
 - https://dify.ai/
 - https://app.tavily.com/home
@@ -107,7 +107,7 @@ Please specify the necessary environment variables in the `.env.example` file lo
 
 ### 1. Generate JSON File
 
-Run the following command in each example directory to generate the necessary JSON file:
+Run the following command in each case directory to generate the necessary JSON file:
 
 ```bash
 # Activate virtual environment
@@ -119,7 +119,7 @@ Run the following command in each example directory to generate the necessary JS
 source .venv/bin/activate
 
 # Navigate to example directory
-cd example1
+cd case1
 
 # Generate JSON file
 python auto_mcp_json.py

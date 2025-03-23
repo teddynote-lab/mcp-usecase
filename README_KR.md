@@ -121,7 +121,7 @@ RAG에 필요한 PDF 파일을 `./data`에 넣어주세요.
 source .venv/bin/activate
 
 # 예제 디렉토리로 이동
-cd example1
+cd case1
 
 # JSON 파일 생성
 python auto_mcp_json.py
