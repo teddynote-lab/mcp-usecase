@@ -28,8 +28,8 @@ DIFY_APP_SK = your-dify-app-sk
 
 1. 환경 설정 확인
    ```bash
-   # example3 디렉토리로 이동
-   cd example3
+   # case3 디렉토리로 이동
+   cd case3
    
    # 필요한 환경 변수 설정 확인
    # .env 파일이 올바르게 구성되었는지 확인하세요
@@ -62,7 +62,7 @@ Dify 워크플로우를 실행해서 "인공지능의 윤리적 문제"에 대�
 
 ### 구현 세부사항
 
-`example3/mcp_server.py` 파일에는 다음과 같은 주요 구성 요소가 포함되어 있습니다:
+`case3/mcp_server.py` 파일에는 다음과 같은 주요 구성 요소가 포함되어 있습니다.
 
 1. 환경 변수 로드
 2. FastMCP 서버 초기화
@@ -100,8 +100,8 @@ DIFY_APP_SK = your-dify-app-sk
 
 1. Check environment configuration
    ```bash
-   # Navigate to example3 directory
-   cd example3
+   # Navigate to case3 directory
+   cd case3
    
    # Check the required environment variables
    # Make sure the .env file is properly configured
@@ -134,7 +134,7 @@ This request passes "ethical issues in artificial intelligence" as input to the 
 
 ### Implementation Details
 
-The `example3/mcp_server.py` file includes the following main components:
+The `case3/mcp_server.py` file includes the following main components.
 
 1. Load environment variables
 2. Initialize FastMCP server

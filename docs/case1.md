@@ -24,8 +24,8 @@ OPENAI_API_KEY = "sk-"
 
 1. 환경 설정 확인
    ```bash
-   # example1 디렉토리로 이동
-   cd example1
+   # case1 디렉토리로 이동
+   cd case1
    
    # 필요한 환경 변수 설정 확인
    # .env 파일이 올바르게 구성되었는지 확인하세요
@@ -56,7 +56,7 @@ Claude Desktop 또는 Cursor에서 다음과 같이 사용할 수 있습니다.
 
 ### 구현 세부사항
 
-`example1/mcp_server.py` 파일은 다음과 같은 주요 구성 요소로 이루어져 있습니다.
+`case1/mcp_server.py` 파일은 다음과 같은 주요 구성 요소로 이루어져 있습니다.
 
 1. PDF 파일 경로 설정 및 RAG 체인 초기화
 2. 검색 결과 포맷팅 함수
@@ -128,8 +128,8 @@ OPENAI_API_KEY = "sk-"
 
 1. Check environment configuration
    ```bash
-   # Navigate to example1 directory
-   cd example1
+   # Navigate to case1 directory
+   cd case1
    
    # Check the required environment variables
    # Make sure the .env file is properly configured
@@ -160,7 +160,7 @@ You can use it in Claude Desktop or Cursor as follows:
 
 ### Implementation Details
 
-The `example1/mcp_server.py` file consists of the following main components:
+The `case1/mcp_server.py` file consists of the following main components:
 
 1. PDF file path setup and RAG chain initialization
 2. Search results formatting function
