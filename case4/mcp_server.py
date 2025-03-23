@@ -27,7 +27,7 @@ def format_search_results(response):
     Converts search results to markdown format.
     
     Args:
-        search_results: Exa search results
+        search_results: Tavily search results
         
     Returns:
         String in markdown format
