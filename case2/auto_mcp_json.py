@@ -29,7 +29,10 @@ def create_mcp_json():
     project_root = Path(__file__).parent.absolute()
 
     # .venv python executable path
-    python_path = str(project_root.parent / ".venv" / "bin" / "python")
+    if os.name == 'nt':  # Windows
+        python_path = str(project_root.parent / ".venv" / "Scripts" / "python.exe")
+    else:  # Mac, Ubuntu etc
+        python_path = str(project_root.parent / ".venv" / "bin" / "python")
 
     server_script = project_root / "mcp_server.py"
 
