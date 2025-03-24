@@ -72,8 +72,15 @@ cd mcp
 
 #### Using uv (recommended)
 ```bash
+# macOS/Linux
 uv venv
 uv pip install -r requirements.txt
+```
+
+```bash
+# Windows
+uv venv
+uv pip install -r requirements_windows.txt
 ```
 
 #### Using pip
@@ -82,6 +89,7 @@ python -m venv .venv
 
 # Windows
 .venv\Scripts\activate
+pip install -r requirements_windows.txt
 
 # macOS/Linux
 source .venv/bin/activate
