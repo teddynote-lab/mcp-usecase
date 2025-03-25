@@ -138,7 +138,7 @@ python auto_mcp_json.py
 1. Launch Claude Desktop or Cursor
 2. Open MCP settings menu
 3. Copy and paste the generated JSON content
-4. Save and `restart`
+4. Save and `restart` (If you're using Windows, we recommend fully closing the process via Task Manager and then restarting the application.)
 
 > **Note**: When you run Claude Desktop or Cursor, the MCP server will automatically run with it. When you close the software, the MCP server will also terminate.
 
