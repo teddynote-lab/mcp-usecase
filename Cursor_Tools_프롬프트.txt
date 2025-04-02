@@ -1,0 +1,75 @@
+ {
+      "type": "function",
+      "function": {
+        "name": "mcp_rag_mcp_keyword_search",
+        "parameters": {
+          "type": "object",
+          "title": "keyword_searchArguments",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "title": "Query"
+            },
+            "top_k": {
+              "type": "integer",
+              "title": "Top K",
+              "default": 5
+            }
+          }
+        },
+        "description": "\nPerforms keyword-based search on PDF documents.\nReturns the most relevant results based on exact word/phrase matches.\nIdeal for finding specific terms, definitions, or exact phrases in documents.\n\nParameters:\n    query: Search query\n    top_k: Number of results to return\n\n"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "mcp_rag_mcp_semantic_search",
+        "parameters": {
+          "type": "object",
+          "title": "semantic_searchArguments",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "title": "Query"
+            },
+            "top_k": {
+              "type": "integer",
+              "title": "Top K",
+              "default": 5
+            }
+          }
+        },
+        "description": "\nPerforms semantic search on PDF documents.\nFinds content semantically similar to the query, delivering relevant information even without exact word matches.\nBest for conceptual questions, understanding themes, or when you need information related to a topic.\n\nParameters:\n    query: Search query\n    top_k: Number of results to return\n\n"
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "mcp_rag_mcp_hybrid_search",
+        "parameters": {
+          "type": "object",
+          "title": "hybrid_searchArguments",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "title": "Query"
+            },
+            "top_k": {
+              "type": "integer",
+              "title": "Top K",
+              "default": 5
+            }
+          }
+        },
+        "description": "\nPerforms hybrid search (keyword + semantic) on PDF documents.\nCombines exact keyword matching and semantic similarity to deliver optimal results.\nThe most versatile search option for general questions or when unsure which search type is best.\n\nParameters:\n    query: Search query\n    top_k: Number of results to return\n\n"
+      }
+    }
