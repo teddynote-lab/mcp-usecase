@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "rag-mcp": {
+      "command": "C:\\dev\\study\\mcp-usecase\\.venv\\Scripts\\python.exe",
+      "args": [
+        "C:\\dev\\study\\mcp-usecase\\case1\\mcp_server.py"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "YOUR_API_KEY_HERE",
+        "DEFAULT_TOP_K": "5"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/github",
+        "--key",
+        "5ed409ad-e050-44db-a924-3923977b728b"
+      ]
+    }
+  }
+}
