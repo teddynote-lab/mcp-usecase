@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/teddynote-lab-mcp-usecase-badge.png)](https://mseep.ai/app/teddynote-lab-mcp-usecase)
+
 # Quick-start Auto MCP : All in one Claude Desktop and Cursor
 
 [English](README.md) | [한국어](README_KR.md)
