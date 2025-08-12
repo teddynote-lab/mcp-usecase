@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "rag-mcp": {
+      "command": "/Users/teddy/Dev/github/03-teddynote-lab/mcp-usecase/.venv/bin/python",
+      "args": [
+        "/Users/teddy/Dev/github/03-teddynote-lab/mcp-usecase/case1/mcp_server.py"
+      ],
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+        "DEFAULT_TOP_K": "5"
+      }
+    }
+  }
+}

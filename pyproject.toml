@@ -1,7 +1,17 @@
 [project]
-name = "mcp"
+name = "mcp-usecases"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "fastmcp>=2.11.2",
+    "langchain>=0.3.27",
+    "langchain-chroma>=0.2.5",
+    "langchain-community>=0.3.27",
+    "langchain-openai>=0.3.29",
+    "mcp>=1.12.4",
+    "pdfplumber>=0.11.7",
+    "pykrx>=1.0.51",
+    "rank-bm25>=0.2.2",
+]
